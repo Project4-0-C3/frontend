@@ -1,9 +1,15 @@
-<script setup lang="ts">
-import TheWelcome from "../components/TheWelcome.vue";
-</script>
-
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <SearchBarComponent />
 </template>
+
+<script>
+import SearchBarComponent from '@/components/events/SearchBarComponent.vue';
+export default {
+  name: 'Home',
+  components: { SearchBarComponent },
+  setup() {},
+  //   data() {},
+  mounted() {},
+  created() {},
+};
+</script>
