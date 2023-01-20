@@ -40,12 +40,12 @@
         >
           Admin
         </router-link>
-        <router-link
+        <!-- <router-link
           to="/shouldRedirectToApi"
           class="font-bold text-gray-100 hover:text-primary-orange"
         >
           Redirect
-        </router-link>
+        </router-link> -->
         <router-link
           to="/about"
           class="font-bold text-gray-100 hover:text-primary-orange"

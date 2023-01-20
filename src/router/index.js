@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import ApiDetailsView from '../views/ApiDetails.vue';
+import ApiDetailsView from '../views/EventDetails.vue';
 
 
 const routes = [
@@ -20,9 +20,15 @@ const routes = [
     component: () => import('../views/ApiView.vue')
   },
   {
+    path: '/user/:id',
+    name: 'UserDetails',
+    component: () => import('../views/UserDetails.vue'),
+    props: true,
+  },
+  {
     path: '/event/:id',
     name: 'EventDetails',
-    component: () => import('../views/ApiDetails.vue'),
+    component: () => import('../views/EventDetails.vue'),
     props: true,
   },
   {

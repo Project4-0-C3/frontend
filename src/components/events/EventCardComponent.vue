@@ -3,9 +3,12 @@
     :to="{ name: 'EventDetails', params: { id: event.eventId } }"
     class="block p-6 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
   >
-    <h5 class="text-xl leading-tight font-bold mb-2">
+    <h5 class="text-xl leading-tight text-primary-orange font-bold ">
       {{ event.name }}
     </h5>
+    <p class="font-bold text-black text-lg mb-2">
+      {{ event.eventType.name }}
+    </p>
     <p class="text-base">
       {{ event.location }}
     </p>
@@ -22,6 +25,7 @@ defineProps({
     name: String,
     location: String,
     eventTypeId: Number,
+    eventType: { name: String },
   },
 });
 </script>
