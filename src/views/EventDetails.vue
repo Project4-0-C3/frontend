@@ -17,36 +17,41 @@
       <span class="col">{{ event.location }}</span>
       <p class="mt-4 col">{{ event.description }}</p>
     </div>
-    <div class="grid grid-cols-2 mt-4">
-      <div class="col">
-        <h2 class="text-xl text-primary-orange mb-2">People on the job</h2>
-        <div v-for="e in event.eventUsers">
-          {{ e }}
-          <span class="text-red-500">{{
-            e.user ? e.user : 'User is still null'
-          }}</span>
-        </div>
-      </div>
-      <div class="col">
-        <h2 class="text-xl text-primary-orange mb-2">Used Microphones</h2>
 
-        <div v-for="e in event.eventRecordingDevices">
-          {{ e.placementName }}
-          <span class="text-red-500">{{
-            e.recordingDevice
-              ? e.recordingDevice
-              : 'recordingDevice is still null'
-          }}</span>
+    <div class="col mt-4">
+      <h2 class="text-xl text-primary-orange mb-2">
+        People on the job
+        <span class="text-xs text-white text-opacity-40">
+          event.eventUsers.length
+        </span>
+      </h2>
+      <div
+        v-if="event.eventUsers"
+        class="grid grid-cols-3 xl:grid-cols-5 gap-2"
+      >
+        <GuardCardComponent v-for="e in event.eventUsers" :user="e.user" />
+      </div>
+      <!-- <template v-if="event.eventUsers.length">
+          <div> {{ event.eventUsers.length }}</div>
+        </template> -->
+
+      <div class="col my-4">
+        <h2 class="text-xl text-primary-orange mb-2">Used Microphones</h2>
+        <div class="grid grid-cols-6 gap-2">
+          <RecordingDeviceComponent
+            v-for="e in event.eventRecordingDevices"
+            :recordingDevice="e"
+          />
         </div>
       </div>
       <div class="col-span-2">
         <h2 class="text-xl text-primary-orange mb-2">Groups</h2>
-
-        <div v-for="e in event.groups">
-          {{ e.name }}
-          <span class="text-red-500">{{
-            e.groupGuards ? 'groupGuards is still null' : e.groupGuards
-          }}</span>
+        <div class="grid grid-cols-6 gap-2">
+          <GroupCardComponent
+            v-for="e in event.groups"
+            :group="e"
+            class="aspect-square"
+          />
         </div>
       </div>
     </div>
@@ -55,8 +60,15 @@
 
 <script>
 import dayjs from 'dayjs';
-
+import GuardCardComponent from '@/components/guards/GuardCardComponent.vue';
+import RecordingDeviceComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
+import GroupCardComponent from '@/components/groups/GroupCardComponent.vue';
 export default {
+  components: {
+    GuardCardComponent,
+    RecordingDeviceComponent,
+    GroupCardComponent,
+  },
   props: ['id'],
   name: 'EventDetails',
   methods: {
@@ -77,13 +89,18 @@ export default {
       // Then specify how you want your dates to be formatted
       return date.format('HH:mm');
     },
+    myFunc(a) {
+      console.log(a.length);
+    },
   },
+  setup() {},
   data() {
     // console.log('data')
     return { event: {} };
   },
   async mounted() {
     await this.getDetails();
+    // myFunc(this.event.eventUsers);
   },
 };
 </script>
