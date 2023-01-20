@@ -32,6 +32,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/mics/:id',
+    name: 'MicDetails',
+    component: () => import('../views/RecordingDeviceDetails.vue'),
+    props: true,
+  },
+  {
+    path: '/groups/:id',
+    name: 'GroupDetails',
+    component: () => import('../views/RecordingDeviceDetails.vue'),
+    props: true,
+  },
+  {
     path: '/shouldRedirectToApi',
     redirect: '/api',
   },

@@ -55,8 +55,9 @@ export default {
 
       return this.users.filter((user) =>
     //   {const fullName = user.firstName + ' ' + user.lastName},
-        user.firstName.toLowerCase().includes(this.search.toLowerCase() 
-        )
+        user.firstName.toLowerCase().includes(this.search.toLowerCase())
+        || user.lastName.toLowerCase().includes(this.search.toLowerCase())
+        // || user.email.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },
