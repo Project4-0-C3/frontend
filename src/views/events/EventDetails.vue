@@ -22,7 +22,7 @@
       <h2 class="text-xl text-primary-orange mb-2">
         People on the job
         <span class="text-xs text-white text-opacity-40">
-          event.eventUsers.length
+          {{event.eventUsers?.length}} Users 
         </span>
       </h2>
       <div
@@ -31,21 +31,30 @@
       >
         <GuardCardComponent v-for="e in event.eventUsers" :user="e.user" />
       </div>
-      <!-- <template v-if="event.eventUsers.length">
-          <div> {{ event.eventUsers.length }}</div>
-        </template> -->
+      <template v-if="event.eventUsers?.length <= 0">
+          <div class="text-red-500"> ADD PEOPLE SHOULD COME HERE IF NO USERS</div>
+        </template>
 
       <div class="col my-4">
-        <h2 class="text-xl text-primary-orange mb-2">Used Microphones</h2>
+        <h2 class="text-xl text-primary-orange mb-2">Used Microphones <span class="text-xs text-white text-opacity-40">
+          {{event.eventRecordingDevices?.length}} Microphones 
+        </span></h2>
+        
         <div class="grid grid-cols-6 gap-2">
           <RecordingDeviceComponent
             v-for="e in event.eventRecordingDevices"
             :recordingDevice="e"
           />
         </div>
+
+        <template v-if="event.eventRecordingDevices?.length <= 0">
+          <div class="text-red-500"> ADD RECORDINGDEVICES SHOULD COME HERE IF NO RECORDINGDEVICES</div>
+        </template>
       </div>
       <div class="col-span-2">
-        <h2 class="text-xl text-primary-orange mb-2">Groups</h2>
+        <h2 class="text-xl text-primary-orange mb-2">Groups <span class="text-xs text-white text-opacity-40">
+          {{event.groups?.length}} Groups 
+        </span></h2>
         <div class="grid grid-cols-6 gap-2">
           <GroupCardComponent
             v-for="e in event.groups"
@@ -53,6 +62,9 @@
             class="aspect-square"
           />
         </div>
+        <template v-if="event.groups?.length <= 0">
+          <div class="text-red-500"> ADD GROUPS SHOULD COME HERE IF NO GROUPS</div>
+        </template>
       </div>
     </div>
   </div>
