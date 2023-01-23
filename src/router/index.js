@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import ApiDetailsView from '../views/EventDetails.vue';
-
+import ApiDetailsView from '../views/events/EventDetails.vue';
 
 const routes = [
   {
@@ -9,39 +8,47 @@ const routes = [
     name: 'Home',
     component: HomeView,
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/AboutView.vue')
-  },
+  
+  // ADMIN
   {
     path: '/admin/home',
     name: 'AdminHome',
-    component: () => import('../views/ApiView.vue')
+    component: () => import('../views/AdminView.vue'),
   },
   {
     path: '/user/:id',
     name: 'UserDetails',
-    component: () => import('../views/UserDetails.vue'),
+    component: () => import('../views/users/UserDetails.vue'),
     props: true,
   },
   {
     path: '/event/:id',
     name: 'EventDetails',
-    component: () => import('../views/EventDetails.vue'),
+    component: () => import('../views/events/EventDetails.vue'),
     props: true,
   },
+
+  // DEVICES
   {
     path: '/mics/:id',
     name: 'MicDetails',
-    component: () => import('../views/RecordingDeviceDetails.vue'),
+    component: () => import('../views/events/RecordingDeviceDetails.vue'),
     props: true,
   },
+
+  // GROUPS AND THEIR USERS
   {
     path: '/groups/:id',
     name: 'GroupDetails',
-    component: () => import('../views/RecordingDeviceDetails.vue'),
+    component: () => import('../views/events/GroupDetails.vue'),
     props: true,
+  },
+
+  // OTHER
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/AboutView.vue'),
   },
   {
     path: '/shouldRedirectToApi',
@@ -58,7 +65,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  linkActiveClass: 'active'
+  linkActiveClass: 'active',
 });
 
 export default router;
