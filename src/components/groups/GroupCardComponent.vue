@@ -1,9 +1,9 @@
 <template>
   <router-link
     :to="{ name: 'GroupDetails', params: { id: group.groupId } }"
-    class="rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 text-center"
+    class="rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 text-center h-full w-full flex items-center justify-center"
   >
-    <div class="">
+    <div>
       <h5 class="leading-tight text-primary-orange text-xl uppercase">
         {{ group.name }}
         <!-- <span class="text-xs text-white text-opacity-40"> {{ group.zone }}</span> -->

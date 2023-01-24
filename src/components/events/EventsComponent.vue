@@ -23,7 +23,7 @@ export default {
 
   methods: {
     GetEvents() {
-      fetch('https://localhost:7100/api/Event')
+      fetch(`${process.env.VUE_APP_BASE_URL}Event`)
         .then((res) => res.json())
         .then((data) => (this.events = data))
         .catch((err) => console.log('retrieve events: ', err));
