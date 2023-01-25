@@ -27,15 +27,20 @@
 
 <script>
 import EventRecordingDeviceCardComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
+import axios from 'axios';
+
 export default {
   components: { EventRecordingDeviceCardComponent },
   props: ['id'],
   name: 'GroupDetails',
   methods: {
     getDetails() {
-      fetch(`https://localhost:7100/api/Group/${this.id}`)
-        .then((res) => res.json())
-        .then((data) => (this.group = data))
+      // fetch(`https://localhost:7100/api/Group/${this.id}`)
+      //   .then((res) => res.json())
+      //   .then((data) => (this.group = data))
+        axios
+        .get(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
+        .then((res) => (this.event = res.data))
         .catch((err) => console.log('retrieve group: ', err));
       // console.log('mounted')
     },

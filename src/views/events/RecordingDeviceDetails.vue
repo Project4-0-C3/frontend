@@ -14,6 +14,7 @@
   </template>
   
   <script>
+  import axios from 'axios';
   import dayjs from 'dayjs';
   
   export default {
@@ -21,9 +22,12 @@
     name: 'RecordingDeviceDetails',
     methods: {
       getDetails() {
-        fetch(`https://localhost:7100/api/RecordingDevice/${this.id}`)
-          .then((res) => res.json())
-          .then((data) => (this.recordingDevice = data))
+        // fetch(`https://localhost:7100/api/RecordingDevice/${this.id}`)
+        //   .then((res) => res.json())
+        //   .then((data) => (this.recordingDevice = data))
+          axios
+        .get(`${process.env.VUE_APP_BASE_URL}RecordingDevice/${this.id}`)
+        .then((res) => (this.recordingDevice = res.data))
           .catch((err) => console.log('retrieve recordingDevice: ', err));
         // console.log('mounted')
       },
