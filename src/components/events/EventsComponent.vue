@@ -3,7 +3,7 @@
     <SearchBarComponent :whatToSearch="'Events'" @searched="onSearched" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
       <EventCardComponent
-        v-for="e in filteredData.slice(0,8)"
+        v-for="e in filteredData.slice(0, 8)"
         :key="e.eventId"
         :event="e"
         class="col"
@@ -16,17 +16,27 @@
 import SearchBarComponent from '@/components/shared/SearchBarComponent.vue';
 import EventCardComponent from '@/components/events/EventCardComponent.vue';
 import { ref, watch } from 'vue';
+import axios from 'axios';
 
 export default {
   name: 'Events',
   components: { EventCardComponent, SearchBarComponent },
 
   methods: {
+    // GetEvents() {
+    //   fetch(`${process.env.VUE_APP_BASE_URL}Event`)
+    //     .then((res) => res.json())
+    //     .then((data) => (this.events = data))
+    //     .catch((err) => console.log('retrieve events: ', err));
+    // },
+
     GetEvents() {
-      fetch(`${process.env.VUE_APP_BASE_URL}Event`)
-        .then((res) => res.json())
-        .then((data) => (this.events = data))
-        .catch((err) => console.log('retrieve events: ', err));
+      axios
+        .get(`${process.env.VUE_APP_BASE_URL}Event`)
+        .then((res) => (this.events = res.data))
+        .catch((error) => {
+          console.error('Retrieving events gave an error!', error);
+        });
     },
 
     onSearched(event) {

@@ -16,6 +16,8 @@
 import SearchBarComponent from '@/components/shared/SearchBarComponent.vue';
 import TeamLeadCardComponent from './TeamLeadCardComponent.vue';
 import { ref, watch } from 'vue';
+import axios from 'axios';
+
 
 export default {
   name: 'Teamleads',
@@ -23,10 +25,17 @@ export default {
 
   methods: {
     GetEvents() {
-      fetch('https://localhost:7100/api/User')
-        .then((res) => res.json())
-        .then((data) => (this.users = data))
-        .catch((err) => console.log('retrieve users failed: ', err));
+      // fetch('https://localhost:7100/api/User')
+      //   .then((res) => res.json())
+      //   .then((data) => (console.log(data)))
+      //   .catch((err) => console.log('retrieve users failed: ', err));
+
+        axios
+        .get(`${process.env.VUE_APP_BASE_URL}User?Role=2`)
+        .then((res) => (this.users = res.data))
+        .catch((error) => {
+          console.error('Retrieving users gave an error!', error);
+        });
     },
 
     onSearched(event) {
