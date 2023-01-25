@@ -40,6 +40,13 @@
         >
           Admin
         </router-link>
+        <router-link
+          to="/admin/users"
+          class="font-bold text-gray-100 hover:text-primary-orange"
+        >
+          Manage users
+        </router-link>
+        
         <!-- <router-link
           to="/shouldRedirectToApi"
           class="font-bold text-gray-100 hover:text-primary-orange"
