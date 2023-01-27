@@ -1,19 +1,26 @@
 <template>
   <router-link
-    :to="{ name: 'MicDetails', params: { id: recordingDevice.eventRecordingDeviceId } }"
+    :to="{ name: 'MicDetails', params: { id: mic.eventRecordingDeviceId } }"
     class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
   >
-    <h5 class="leading-tight text-black">
-      {{ recordingDevice.placementName }}
+    <h5 class="leading-tight text-primary-orange">
+      {{ mic.recordingDevice?.name }} <span class="text-xs text-white text-opacity-40">
+        {{ mic.placementName ? mic.placementName : '' }}</span
+      >
     </h5>
+    <p class="text-sm">
+      {{ mic.zone?.name ? mic.zone?.name : 'No place yet' }}
+    </p>
   </router-link>
 </template>
 
-<script setup>
-defineProps({
-  recordingDevice: {
-    eventRecordingDeviceId: Number,
-    placementName: String,
+<script>
+export default {
+  props: ['recordingDevice'],
+  setup(props) {
+    const mic = props.recordingDevice;
+
+    return { mic }
   },
-});
+};
 </script>

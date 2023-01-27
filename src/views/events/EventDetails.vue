@@ -18,7 +18,7 @@
       <p class="mt-4 col">{{ event.description }}</p>
     </div>
     <!-- <EventDetailsComponent :Event="event"/> -->
-    <!-- <CrudEventComponent :crudDetails="event" /> -->
+    <CrudEventComponent :eventData="event" CreateOrUpdate="Update" :EventId="Id" />
 
     <div class="col mt-4">
       <h2 class="text-xl text-primary-orange mb-2">
@@ -33,31 +33,36 @@
       >
         <span
           class="col-span-3 xl:col-span-5 text-xs text-white text-opacity-40"
-          >{{ TeamLeadsLength }} Teamleads</span
+          >{{ allTeamLeads.length }} Teamleads</span
         >
         <UserModalComponent
           :AlrUsedUsers="AlreadyUsedTeamLeads"
-          :EventId="event?.eventId"
+          :EventId="Id"
           :Role="'TeamLead'"
           @reload-details="Reload"
         />
         <!-- <p>{{ allTeamLeads }}</p> -->
-        <UserCardComponent v-for="e in allTeamLeads" :user="e.user" />
+        <UserCardComponent
+          v-for="e in allTeamLeads"
+          :user="e.user"
+          :key="e.user.userId"
+        />
         <span
           class="col-span-3 xl:col-span-5 text-xs text-white text-opacity-40"
-          >{{ GuardsLength }} Guards</span
+          >{{ allGuards.length }} Guards</span
         >
         <UserModalComponent
           :AlrUsedUsers="AlreadyUsedGuards"
-          :EventId="event?.eventId"
+          :EventId="Id"
           :Role="'Guard'"
           @reload-details="Reload"
         />
-        <UserCardComponent v-for="e in allGuards" :user="e.user" />
+        <UserCardComponent
+          v-for="e in allGuards"
+          :user="e.user"
+          :key="e.user.userId"
+        />
       </div>
-      <template v-if="event.eventUsers?.length <= 0">
-        <div class="text-red-500">ADD PEOPLE SHOULD COME HERE IF NO USERS</div>
-      </template>
 
       <div class="col my-4">
         <h2 class="text-xl text-primary-orange mb-2">
@@ -68,6 +73,11 @@
         </h2>
 
         <div class="grid grid-cols-6 gap-2">
+          <MicModalComponent
+            :AlrUsedMics="AlreadyUsedMics"
+            :EventId="Id"
+            @reload-details="Reload"
+          />
           <RecordingDeviceComponent
             v-for="e in event.eventRecordingDevices"
             :recordingDevice="e"
@@ -109,8 +119,8 @@ import UserCardComponent from '@/components/users/UserCardComponent.vue';
 import RecordingDeviceComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
 import GroupCardComponent from '@/components/groups/GroupCardComponent.vue';
 import UserModalComponent from '@/components/users/UserModalComponent.vue';
-// import EventDetailsComponent from '@/components/events/EventDetailsComponent.vue';
 import CrudEventComponent from '@/components/events/CrudEventComponent.vue';
+import MicModalComponent from '@/components/microphones/MicModalComponent.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 
@@ -121,19 +131,16 @@ export default {
     GroupCardComponent,
     UserModalComponent,
     CrudEventComponent,
+    MicModalComponent,
   },
   props: ['id'],
   name: 'EventDetails',
   methods: {
     getDetails() {
-      // fetch(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
-      //   .then((res) => res.json())
-      //   .then((data) => (this.event = data))
       axios
         .get(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
         .then((res) => (this.event = res.data))
         .catch((err) => console.log('retrieve event: ', err));
-      // console.log('getDetails');
     },
     formatDate(dateString) {
       const date = dayjs(dateString);
@@ -146,25 +153,21 @@ export default {
 
     async Reload() {
       await this.getDetails();
-      this.AlreadyUsedGuards;
-      this.AlreadyUsedTeamLeads;
     },
   },
-  setup() {
+  setup(props) {
     const checkedGuards = ref([]);
+    const checkedMics = ref([]);
     const checkedTeamLeads = ref([]);
+    const Id = props.id
 
-    return { checkedGuards, checkedTeamLeads };
-    // console.log(process.env.VUE_APP_BASE_URL);
+    return { checkedGuards, checkedTeamLeads, checkedMics, Id };
   },
   data() {
-    // console.log('data')
     return { event: {} };
   },
   async mounted() {
     await this.getDetails();
-    // console.log('mounted', this.event);
-    // myFunc(this.event.eventUsers);
   },
   computed: {
     allTeamLeads() {
@@ -177,13 +180,9 @@ export default {
         (eventuser) => eventuser.user.roleTypeId == 3
       );
     },
-    GuardsLength() {
-      return this.allGuards.length;
+    allMics() {
+      return this.event.eventRecordingDevices
     },
-    TeamLeadsLength() {
-      return this.allTeamLeads.length;
-    },
-
     AlreadyUsedTeamLeads() {
       this.checkedTeamLeads = [];
       this.allTeamLeads.forEach((u) => {
@@ -197,6 +196,13 @@ export default {
         this.checkedGuards.push(g.user.userId);
       });
       return this.checkedGuards;
+    },
+    AlreadyUsedMics() {
+      this.checkedMics = [];
+      this.event.eventRecordingDevices?.forEach((mic) => {
+        this.checkedMics.push(mic);
+      });
+      return this.checkedMics;
     },
   },
 };
