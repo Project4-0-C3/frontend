@@ -8,7 +8,7 @@
         class="leading-tight text-primary-orange h-full w-full p-2 rounded-lg"
         type="button"
       >
-        Manage {{ Role }}s
+        Manage Mics
       </button>
 
       <div
@@ -17,7 +17,7 @@
       >
         <div class="max-w-2xl p-6 bg-primary-gray rounded-md shadow-xl">
           <div class="flex items-center justify-between">
-            <h3 class="text-2xl">Manage {{ Role }}s</h3>
+            <h3 class="text-2xl">Manage Mics</h3>
 
             <svg
               @click="isOpen = false"
@@ -37,18 +37,20 @@
           </div>
           <SearchBarComponent
             class="my-4"
-            :whatToSearch="Role + 's'"
+            whatToSearch="RecordingDevices"
             @searched="onSearched"
           />
 
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5">
+          <div
+            class="relative overflow-x-auto filteredMicsshadow-md sm:rounded-lg mb-5"
+          >
             <table class="w-full text-sm text-left">
               <thead class="text-xs uppercase bg-gray-50 bg-opacity-10">
                 <tr>
                   <th scope="col" class="p-4">
                     <div class="flex items-center">
                       <input
-                        :checked="filteredUsers.length == checkedUsers.length"
+                        :checked="filteredMics.length == checkedMics.length"
                         @change="SelectAll()"
                         id="checkbox-all-search"
                         type="checkbox"
@@ -60,23 +62,25 @@
                     </div>
                   </th>
                   <th scope="col" class="px-6 py-3">Name</th>
-                  <th scope="col" class="px-6 py-3">Email</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr
-                  v-for="user in filteredUsers"
+                  v-for="mic in filteredMics"
                   class="border-b border-gray-700 hover:bg-primary-orange hover:bg-opacity-10 duration-200 hover:duration-200"
                 >
-                  <td class="w-4 p-4" :key="user.userId">
+                  <td class="w-4 p-4" :key="mic.recordingDeviceId">
                     <div class="flex items-center">
                       <input
-                        :id="user.userId"
-                        :value="user.userId"
+                        :id="mic.recordingDeviceId"
+                        :value="mic.recordingDeviceId"
                         type="checkbox"
-                        v-model="checkedUsers"
-                        class="w-4 h-4 focus:ring-primary-orange focus:ring-2"
+                        v-model="checkedMics"
+                        :disabled="
+                          incidentRecordings.includes(mic.recordingDeviceId)
+                        "
+                        class="w-4 h-4"
                       />
                       <label for="checkbox-table-search-1" class="sr-only"
                         >checkbox</label
@@ -87,9 +91,8 @@
                     scope="row"
                     class="px-6 py-4 font-medium whitespace-nowrap"
                   >
-                    {{ user.firstName }} {{ user.lastName }}
+                    {{ mic.name }}
                   </td>
-                  <td class="px-6 py-4">{{ user.email }}</td>
                 </tr>
               </tbody>
             </table>
@@ -114,6 +117,8 @@
   </div>
 </template>
 
+<script setup></script>
+
 <script>
 import { ref, emit } from 'vue';
 import SearchBarComponent from '../shared/SearchBarComponent.vue';
@@ -121,22 +126,23 @@ import axios from 'axios';
 
 export default {
   components: { SearchBarComponent },
-  props: ['AlrUsedUsers', 'EventId', 'Role'],
+  props: ['AlrUsedMics', 'EventId'],
   setup(props) {
-    const checkedUsers = ref(props.AlrUsedUsers);
+    // const checkedMics = ref(props?.AlrUsedMics);
     const EventId = props.EventId;
-    const RoleId = props.Role.toLowerCase() == 'teamlead' ? 2 : 3;
-    const Role = props.Role;
+
     const search = ref('');
 
-    return { checkedUsers, EventId, Role, RoleId, search };
+    return { EventId, search };
   },
 
   data() {
     return {
       isOpen: false,
-      users: [],
-      existingUserNumbers: [],
+      recordingDevices: [],
+      existingMicNumbers: [],
+      checkedMics: [],
+      incidentRecordings: [],
     };
   },
   methods: {
@@ -145,81 +151,105 @@ export default {
     },
     SelectAll() {
       if (
-        this.checkedUsers.length == this.filteredUsers.length &&
-        this.checkedUsers.length == this.users.length
+        this.checkedMics.length == this.filteredMics.length &&
+        this.checkedMics.length == this.recordingDevices.length
       ) {
-        this.checkedUsers = [];
+        this.checkedMics = [];
       } else {
-        this.filteredUsers.forEach((u) => {
-          if (!this.checkedUsers.includes(u.userId)) {
-            this.checkedUsers.push(u.userId);
+        this.filteredMics.forEach((mic) => {
+          if (!this.checkedMics.includes(mic.recordingDeviceId)) {
+            this.checkedMics.push(mic.recordingDeviceId);
           }
         });
       }
     },
-    GetUsers() {
+    GetIncidentRecordingDevices() {
       axios
-        .get(`${process.env.VUE_APP_BASE_URL}User?role=${this.RoleId}`)
-        .then((res) => (this.users = res.data))
-        .catch((error) => {
-          console.error('Retrieving teamleads gave an error!', error);
-        });
-    },
-    async GetExistingUsers() {
-      await axios
-        .get(
-          `${process.env.VUE_APP_BASE_URL}EventUser?event=${this.EventId}&role=${this.RoleId}`
-        )
+        .get(`${process.env.VUE_APP_BASE_URL}Incident?event=${this.EventId}`)
         .then((res) => {
-          res.data.forEach((user) => {
-            this.existingUserNumbers.push(user.userId);
+          res.data.forEach((data) => {
+            if (
+              this.incidentRecordings.indexOf(
+                data.eventRecordingDevice.recordingDeviceId
+              ) == -1
+            ) {
+              this.incidentRecordings.push(
+                data.eventRecordingDevice.recordingDeviceId
+              );
+            }
           });
         })
         .catch((error) => {
-          console.error('Retrieving user gave an error!', error);
+          console.error(
+            'Retrieving recordingDevices does not exist gave an error!',
+            error
+          );
+        });
+    },
+    GetRecordingDevices() {
+      axios
+        .get(`${process.env.VUE_APP_BASE_URL}RecordingDevice`)
+        .then((res) => (this.recordingDevices = res.data))
+        .catch((error) => {
+          console.error('Retrieving recordingDevices gave an error!', error);
+        });
+    },
+    async GetExistingRecordingDevices() {
+      await axios
+        .get(
+          `${process.env.VUE_APP_BASE_URL}EventRecordingDevice?event=${this.EventId}`
+        )
+        .then((res) => {
+          res.data.forEach((mic) => {
+            this.existingMicNumbers.push(mic.recordingDeviceId);
+            this.checkedMics.push(mic.recordingDeviceId);
+          });
+        })
+        .catch((error) => {
+          console.error(
+            'Retrieving existing recordingDevices gave an error!',
+            error
+          );
         });
     },
 
     async SaveChanges() {
-      this.existingUserNumbers.forEach((u) => {
-        if (!this.checkedUsers.includes(u)) {
+      this.existingMicNumbers.forEach((m) => {
+        if (!this.checkedMics.includes(m)) {
           // DeleteRequest
           axios
             .delete(
-              `${process.env.VUE_APP_BASE_URL}EventUser/${u}?eventId=${this.EventId}`
+              `${process.env.VUE_APP_BASE_URL}EventRecordingDevice/${m}?eventId=${this.EventId}`
             )
-
+            .then(() => console.log('Delete successful'))
             .catch((err) =>
-              console.log(
-                `Failed Deleting of EventUser ${e.eventUserId}: `,
-                err
-              )
+              console.log(`Failed Deleting of EventRecordingDevice ${m}: `, err)
             );
         }
       });
-      this.checkedUsers.forEach((c) => {
-        if (!this.existingUserNumbers.includes(c)) {
+      this.checkedMics.forEach((m) => {
+        if (!this.existingMicNumbers.includes(m)) {
           // PostRequest
           const requestOptions = {
             headers: { 'Content-Type': 'application/json' },
             body: {
-              eventUserId: 0,
+              eventRecordingDeviceId: 0,
               eventId: this.EventId,
-              userId: c,
+              recordingDeviceId: m,
             },
           };
           axios
             .post(
-              `${process.env.VUE_APP_BASE_URL}EventUser`,
+              `${process.env.VUE_APP_BASE_URL}EventRecordingDevice`,
               requestOptions.body
             )
             .catch((err) =>
-              console.log(`Failed Posting of EventUser ${c}: `, err)
+              console.log(`Failed Posting of EventRecordingDevice ${m}: `, err)
             );
         }
       });
 
-      await (this.existingUserNumbers = this.checkedUsers);
+      await (this.existingMicNumbers = this.checkedMics);
       setTimeout(() => {
         this.$emit('reload-details');
 
@@ -231,18 +261,15 @@ export default {
   },
 
   async mounted() {
-    await this.GetUsers();
-    await this.GetExistingUsers();
+    await this.GetRecordingDevices();
+    await this.GetExistingRecordingDevices();
+    await this.GetIncidentRecordingDevices();
   },
 
   computed: {
-    filteredUsers() {
-      return this.users.filter(
-        (user) =>
-          (user.firstName + ' ' + user.lastName)
-            .toLowerCase()
-            .includes(this.search.toLowerCase()) ||
-          user.email.toLowerCase().includes(this.search.toLowerCase())
+    filteredMics() {
+      return this.recordingDevices.filter((mic) =>
+        mic.name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },

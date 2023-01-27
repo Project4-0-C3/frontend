@@ -2,6 +2,7 @@
   <div class="col-span-3">
     <SearchBarComponent :whatToSearch="'Events'" @searched="onSearched" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+      <CrudEventComponent :eventData="''" CreateOrUpdate="Create" :EventId="0" />
       <EventCardComponent
         v-for="e in filteredData.slice(0, 8)"
         :key="e.eventId"
@@ -15,12 +16,13 @@
 <script>
 import SearchBarComponent from '@/components/shared/SearchBarComponent.vue';
 import EventCardComponent from '@/components/events/EventCardComponent.vue';
+import CrudEventComponent from './CrudEventComponent.vue';
 import { ref, watch } from 'vue';
 import axios from 'axios';
 
 export default {
   name: 'Events',
-  components: { EventCardComponent, SearchBarComponent },
+  components: { EventCardComponent, SearchBarComponent, CrudEventComponent },
 
   methods: {
     // GetEvents() {
