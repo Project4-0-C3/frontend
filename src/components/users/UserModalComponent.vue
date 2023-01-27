@@ -4,7 +4,7 @@
       class="block rounded-lg shadow-lg bg-primary-gray bg-opacity-60 hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 h-full w-full"
     >
       <button
-        @click="isOpen = true && GetExistingUsers"
+        @click="isOpen = true"
         class="leading-tight text-primary-orange h-full w-full p-2 rounded-lg"
         type="button"
       >
@@ -125,6 +125,8 @@
 <script>
 import { ref, emit } from 'vue';
 import SearchBarComponent from '../shared/SearchBarComponent.vue';
+import axios from 'axios';
+
 
 export default {
   components: { SearchBarComponent },
@@ -132,9 +134,11 @@ export default {
   setup(props) {
     const checkedUsers = ref(props.AlrUsedUsers);
     const EventId = props.EventId;
+    const RoleId = (props.Role = 'teamlead' ? 2 : 1);
     const Role = props.Role;
     const search = ref('');
-    return { checkedUsers, EventId, Role, search };
+
+    return { checkedUsers, EventId, Role, RoleId, search };
   },
 
   data() {
@@ -164,51 +168,76 @@ export default {
       }
     },
     GetUsers() {
-      fetch(`https://localhost:7100/api/User?role=${this.Role}`)
-        .then((res) => res.json())
-        .then((data) => (this.users = data))
-        .catch((err) => console.log('retrieve all teamleads: ', err));
+      // fetch(`https://localhost:7100/api/User?role=${this.RoleId}`)
+      //   .then((res) => res.json())
+      //   .then((data) => (this.users = data))
+      //   .catch((err) => console.log('retrieve all teamleads: ', err));
+
+      axios
+        .get(`${process.env.VUE_APP_BASE_URL}User?role=${this.RoleId}`)
+        .then((res) => (this.users = res.data))
+        .catch((error) => {
+          console.error('Retrieving teamleads gave an error!', error);
+        });
     },
     async GetExistingUsers() {
-      // console.log(this.EventId)
-      await fetch(
-        `https://localhost:7100/api/EventUser?event=${this.EventId}&role=${this.Role}`
-      )
-        .then((res) => res.json())
-
-        .then((data) => {
-          (this.existingUsers = data),
-            data.forEach((user) => {
+      // console.log('existing users from event ',this.EventId)
+      await axios
+        .get(
+          `${process.env.VUE_APP_BASE_URL}EventUser?event=${this.EventId}&role=${this.RoleId}`
+        )
+        .then((res) => {
+          (this.existingUsers = res.data),
+            res.data.forEach((user) => {
               this.existingUserNumbers.push(user.userId);
             });
         })
-        .catch((err) => console.log('retrieve all users within event: ', err));
+        .catch((error) => {
+          console.error('Retrieving user gave an error!', error);
+        });
+      // fetch(
+      //   `https://localhost:7100/api/EventUser?event=${this.EventId}&role=${this.RoleId}`
+      // )
+      //   .then((res) => res.json())
+
+      //   .then((data) => {
+      //     (this.existingUsers = data),
+      //       data.forEach((user) => {
+      //         this.existingUserNumbers.push(user.userId);
+      //       });
+      //   })
+      //   .catch((err) => console.log('retrieve all users within event: ', err));
     },
 
     async SaveChanges() {
       this.existingUsers.forEach((e) => {
         if (!this.checkedUsers.includes(e.userId)) {
           // DeleteRequest
-          fetch(`https://localhost:7100/api/EventUser/${e.eventUserId}`, {
-            method: 'DELETE',
-          })
-            // .then(() => (element.innerHTML = 'Delete successful'))
-            .catch((err) =>
-              console.log(
-                `Failed Deleting of EventUser ${e.eventUserId}: `,
-                err
-              )
-            );
+          axios
+            .delete(
+              `${process.env.VUE_APP_BASE_URL}EventUser/${e.eventUserId}`
+            )
+            .then(() => this.setState({ status: 'Delete successful' }));
+          // fetch(`https://localhost:7100/api/EventUser/${e.eventUserId}`, {
+          //   method: 'DELETE',
+          // })
+
+          // .then(() => (element.innerHTML = 'Delete successful'))
+          // .catch((err) =>
+          //   console.log(
+          //     `Failed Deleting of EventUser ${e.eventUserId}: `,
+          //     err
+          //   )
+          // );
           // Cleanup List
-          this.existingUsers.slice(this.existingUsers.indexOf(e), 1);
-          // this.existingUserNumbers.slice(this.existingUsers.indexOf(e), 1);
+          // this.existingUsers.splice(this.existingUsers.indexOf(e), 1);
+          // this.existingUserNumbers.splice(this.existingUserNumbers.indexOf(e.userId), 1);
         }
       });
       this.checkedUsers.forEach((c) => {
         if (!this.existingUserNumbers.includes(c)) {
           // PostRequest
           const requestOptions = {
-            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               eventUserId: 0,
@@ -217,31 +246,35 @@ export default {
             }),
           };
           // console.log(requestOptions);
-          fetch('https://localhost:7100/api/EventUser', requestOptions)
-            .then((response) => response.json())
+          axios
+            .post(
+              `${process.env.VUE_APP_BASE_URL}/EventUser`,
+              requestOptions.body
+            )
+            .then((res) => console.log(res.json()))
             .catch((err) =>
               console.log(`Failed Posting of EventUser ${c}: `, err)
             );
+
+          // fetch('https://localhost:7100/api/EventUser', requestOptions)
+          //   .then((response) => response.json())
+          //   .catch((err) =>
+          //     console.log(`Failed Posting of EventUser ${c}: `, err)
+          //   );
           // .then((data) => (this.postId = data.id));
+          // this.existingUserNumbers.push(c);
         }
       });
 
-      await (this.existingUserNumbers = this.checkedUsers);
-      this.existingUsers.forEach((u) => {
-        // console.log(u)
-        if (!this.checkedUsers.includes(u.userId)) {
-          console.log(this.existingUsers.indexOf(u))
-          this.existingUsers.slice(this.existingUsers.indexOf(u), 1);
-          // this.existingUsers.slice(this.existingUsers.indexOf(u), 1);
-        }
-      });
-
+      // await (this.existingUserNumbers = this.checkedUsers);
+      await this.GetExistingUsers;
       setTimeout(() => {
         this.$emit('reload-details');
+
         setTimeout(() => {
           this.isOpen = false;
         }, 500);
-      }, 500);
+      }, 2000);
     },
   },
 

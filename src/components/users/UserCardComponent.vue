@@ -4,7 +4,7 @@
     class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
   >
     <h5 class="leading-tight text-primary-orange">
-      {{ user.firstName }} {{ user.lastName }} <span class="text-xs text-white text-opacity-40"> {{ user.role }}</span>
+      {{ user.firstName }} {{ user.lastName }} <span class="text-xs text-white text-opacity-40"> {{ user.roleTypeId == 2 ? 'TeamLead' : 'Guard' }}</span>
     </h5>
     <p class="text-base">
       {{ user.email }} 
@@ -19,7 +19,7 @@ defineProps({
     firstName: String,
     lastName: String,
     email: String,
-    role: String
+    roleTypeId: Number
   },
 });
 </script>

@@ -5,10 +5,10 @@
     </button>
   </div>
   <div class="grid">
-    <h1 class="row text-4xl text-primary-orange">
+    <h1 class="col text-4xl text-primary-orange">
       {{ event.name }}
     </h1>
-    <h2 class="row text-xl mb-6 text-white text-opacity-40">
+    <h2 class="col text-xl mb-6 text-white text-opacity-40">
       {{ event.eventType?.name }}
     </h2>
     <div class="grid">
@@ -17,6 +17,8 @@
       <span class="col">{{ event.location }}</span>
       <p class="mt-4 col">{{ event.description }}</p>
     </div>
+    <!-- <EventDetailsComponent :Event="event"/> -->
+    <!-- <CrudEventComponent :crudDetails="event" /> -->
 
     <div class="col mt-4">
       <h2 class="text-xl text-primary-orange mb-2">
@@ -107,7 +109,10 @@ import UserCardComponent from '@/components/users/UserCardComponent.vue';
 import RecordingDeviceComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
 import GroupCardComponent from '@/components/groups/GroupCardComponent.vue';
 import UserModalComponent from '@/components/users/UserModalComponent.vue';
+// import EventDetailsComponent from '@/components/events/EventDetailsComponent.vue';
+import CrudEventComponent from '@/components/events/CrudEventComponent.vue';
 import { ref } from 'vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -115,36 +120,34 @@ export default {
     RecordingDeviceComponent,
     GroupCardComponent,
     UserModalComponent,
+    CrudEventComponent,
   },
   props: ['id'],
   name: 'EventDetails',
   methods: {
     getDetails() {
-      fetch(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
-        .then((res) => res.json())
-        .then((data) => (this.event = data))
+      // fetch(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
+      //   .then((res) => res.json())
+      //   .then((data) => (this.event = data))
+      axios
+        .get(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
+        .then((res) => (this.event = res.data))
         .catch((err) => console.log('retrieve event: ', err));
       // console.log('getDetails');
+    },
+    formatDate(dateString) {
+      const date = dayjs(dateString);
+      return date.format('DD/MM/YYYY');
+    },
+    formatHour(dateString) {
+      const date = dayjs(dateString);
+      return date.format('HH:mm');
     },
 
     async Reload() {
       await this.getDetails();
       this.AlreadyUsedGuards;
       this.AlreadyUsedTeamLeads;
-      // await this.allTeamLeads;
-      // await this.allGuards;
-      //  console.log('Reload pageData');
-    },
-
-    formatDate(dateString) {
-      const date = dayjs(dateString);
-      // Then specify how you want your dates to be formatted
-      return date.format('DD/MM/YYYY');
-    },
-    formatHour(dateString) {
-      const date = dayjs(dateString);
-      // Then specify how you want your dates to be formatted
-      return date.format('HH:mm');
     },
   },
   setup() {
@@ -165,13 +168,13 @@ export default {
   },
   computed: {
     allTeamLeads() {
-      return this.event.eventUsers.filter((eventuser) =>
-        eventuser.user.role.toLowerCase().includes('teamlead')
+      return this.event.eventUsers.filter(
+        (eventuser) => eventuser.user.roleTypeId == 2
       );
     },
     allGuards() {
-      return this.event.eventUsers.filter((eventuser) =>
-        eventuser.user.role.toLowerCase().includes('guard')
+      return this.event.eventUsers.filter(
+        (eventuser) => eventuser.user.roleTypeId == 3
       );
     },
     GuardsLength() {

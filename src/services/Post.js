@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 async function PostEventUser(id, eventId) {
     const requestOptions = {
         method: 'POST',
