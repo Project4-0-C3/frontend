@@ -1,4 +1,4 @@
-<template>
+<template v-if="event">
   <div class="w-full mb-3">
     <button @click="$router.go(-1)" class="hover:underline text-primary-orange">
       Go back
@@ -18,7 +18,7 @@
       <p class="mt-4 col">{{ event.description }}</p>
     </div>
     <!-- <EventDetailsComponent :Event="event"/> -->
-    <CrudEventComponent :eventData="event" CreateOrUpdate="Update" :EventId="Id" />
+    <EventModalComponent :event="event" CreateOrUpdate="Update" :EventId="Id" />
 
     <div class="col mt-4">
       <h2 class="text-xl text-primary-orange mb-2">
@@ -119,7 +119,7 @@ import UserCardComponent from '@/components/users/UserCardComponent.vue';
 import RecordingDeviceComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
 import GroupCardComponent from '@/components/groups/GroupCardComponent.vue';
 import UserModalComponent from '@/components/users/UserModalComponent.vue';
-import CrudEventComponent from '@/components/events/CrudEventComponent.vue';
+import EventModalComponent from '@/components/events/EventModalComponent.vue';
 import MicModalComponent from '@/components/microphones/MicModalComponent.vue';
 import { ref } from 'vue';
 import axios from 'axios';
@@ -130,7 +130,7 @@ export default {
     RecordingDeviceComponent,
     GroupCardComponent,
     UserModalComponent,
-    CrudEventComponent,
+    EventModalComponent,
     MicModalComponent,
   },
   props: ['id'],

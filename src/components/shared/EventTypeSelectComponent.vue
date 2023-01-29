@@ -35,7 +35,7 @@ export default {
     this.GetRoles();
   },
   setup(props) {
-    const selected = ref(props?.alrSelected ? props?.alrSelected: '');
+    const selected = ref(props.alrSelected ? props.alrSelected : '');
     return { selected };
   },
   emits: ['selectedEventType'],
