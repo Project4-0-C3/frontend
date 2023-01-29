@@ -53,7 +53,7 @@
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
               id="name"
               type="text"
-              :value="eventData.name"
+              v-model="eventData.name"
               placeholder="Name"
             />
 
@@ -62,12 +62,12 @@
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
               id="date"
               type="datetime-local"
-              :value="eventData.date"
+              v-model="eventData.date"
             />
             <EventTypeSelectComponent
               @selected-event-type="selectEvent"
               required
-              :alrSelected="eventData?.eventTypeId"
+              :alrSelected="eventData.eventTypeId"
             />
             <input
               required
@@ -75,7 +75,7 @@
               id="address"
               type="text"
               placeholder="Address"
-              :value="eventData.location"
+              v-model="eventData.location"
             />
 
             <!-- content here -->
@@ -89,7 +89,7 @@
           </button>
 
           <button
-            @click="SaveChanges"
+            @click="SaveChanges(eventData)"
             class="px-6 py-2 ml-2 text-blue-100 bg-primary-orange rounded hover:bg-opacity-70"
           >
             {{ CreateOrUpdate }} Event
@@ -103,30 +103,63 @@
 <script>
 import { ref } from 'vue';
 import EventTypeSelectComponent from '../shared/EventTypeSelectComponent.vue';
-
+import axios from 'axios';
 export default {
   components: { EventTypeSelectComponent },
-  props: ['eventData', 'CreateOrUpdate', 'EventId'],
+  props: ['event', 'CreateOrUpdate', 'EventId'],
   setup(props) {
-    const eventData = ref([
-      props.eventData.name,
-      props.eventData.date,
-      props.eventData.eventTypeId,
-      props.eventData.eventTypeId,
-    ]);
     const Id = props.EventId;
     const CreateOrUpdate = props.CreateOrUpdate;
+    const eventInfo = props.event;
 
-    return { eventData, CreateOrUpdate, Id };
+    return { eventInfo, CreateOrUpdate, Id };
   },
 
   data() {
-    return { isOpen: true };
+    return {
+      isOpen: false,
+      eventData: {
+        eventId: this.eventInfo ? this.eventInfo.eventId : 0,
+        name: this.eventInfo ? this.eventInfo.name : '',
+        date: this.eventInfo
+          ? this.eventInfo.date
+          : new Date().toISOString().substr(0, 10),
+        location: this.eventInfo ? this.eventInfo.location : '',
+        eventTypeId: this.eventInfo ? this.eventInfo.eventTypeId : 0,
+      },
+    };
   },
 
   methods: {
-    selectEvent(event) {
-      console.log(event);
+    selectEvent(newData) {
+      this.eventData.eventTypeId = newData;
+      console.log(this.eventData);
+    },
+
+    SaveChanges(eventInformation) {
+      if (eventInformation.eventId != 0) {
+        this.UpdateEvent(eventInformation);
+      } else {
+        this.CreateEvent(eventInformation);
+      }
+    },
+
+    CreateEvent(eventInformation) {
+      axios
+        .post(
+          `${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`,
+          {
+            eventInformation,
+          }
+        )
+        .catch((err) => console.log(`Failed Creating of Event`, err));
+    },
+    UpdateEvent(eventInformation) {
+      axios
+        .put(`${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`, {
+          eventInformation,
+        })
+        .catch((err) => console.log(`Failed Updating of Event`, err));
     },
   },
 };

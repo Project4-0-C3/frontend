@@ -2,7 +2,11 @@
   <div class="col-span-3">
     <SearchBarComponent :whatToSearch="'Events'" @searched="onSearched" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-      <CrudEventComponent :eventData="''" CreateOrUpdate="Create" :EventId="0" />
+      <CrudEventComponent
+        :eventData="''"
+        CreateOrUpdate="Create"
+        :EventId="0"
+      />
       <EventCardComponent
         v-for="e in filteredData.slice(0, 8)"
         :key="e.eventId"
@@ -16,7 +20,7 @@
 <script>
 import SearchBarComponent from '@/components/shared/SearchBarComponent.vue';
 import EventCardComponent from '@/components/events/EventCardComponent.vue';
-import CrudEventComponent from './CrudEventComponent.vue';
+import CrudEventComponent from './EventModalComponent.vue';
 import { ref, watch } from 'vue';
 import axios from 'axios';
 
@@ -25,13 +29,6 @@ export default {
   components: { EventCardComponent, SearchBarComponent, CrudEventComponent },
 
   methods: {
-    // GetEvents() {
-    //   fetch(`${process.env.VUE_APP_BASE_URL}Event`)
-    //     .then((res) => res.json())
-    //     .then((data) => (this.events = data))
-    //     .catch((err) => console.log('retrieve events: ', err));
-    // },
-
     GetEvents() {
       axios
         .get(`${process.env.VUE_APP_BASE_URL}Event`)
@@ -53,13 +50,11 @@ export default {
     };
   },
   data() {
-    // console.log('data')
     return { events: [] };
   },
 
   mounted() {
     this.GetEvents();
-    // console.log('mounted')
   },
 
   computed: {
