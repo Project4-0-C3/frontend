@@ -78,7 +78,14 @@
               v-model="eventData.location"
             />
 
-            <!-- content here -->
+            <input
+              required
+              class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
+              id="description"
+              type="text"
+              v-model="eventData.description"
+              placeholder="Description"
+            />
           </div>
 
           <button
@@ -126,6 +133,7 @@ export default {
           : new Date().toISOString().substr(0, 10),
         location: this.eventInfo ? this.eventInfo.location : '',
         eventTypeId: this.eventInfo ? this.eventInfo.eventTypeId : 0,
+        description: this.eventInfo ? this.eventInfo.description : '',
       },
     };
   },
@@ -145,20 +153,42 @@ export default {
     },
 
     CreateEvent(eventInformation) {
+      const requestOptions = {
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          eventId: 0,
+          name: eventInformation.name,
+          date: eventInformation.date,
+          location: eventInformation.location,
+          eventTypeId: eventInformation.eventTypeId,
+          description: eventInformation.description,
+        },
+      };
       axios
         .post(
-          `${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`,
-          {
-            eventInformation,
-          }
+          `${process.env.VUE_APP_BASE_URL}Event`,
+
+          requestOptions.body
         )
         .catch((err) => console.log(`Failed Creating of Event`, err));
     },
     UpdateEvent(eventInformation) {
+      const requestOptions = {
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          eventId: eventInformation.eventId,
+          name: eventInformation.name,
+          date: eventInformation.date,
+          location: eventInformation.location,
+          eventTypeId: eventInformation.eventTypeId,
+          description: eventInformation.description,
+        },
+      };
       axios
-        .put(`${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`, {
-          eventInformation,
-        })
+        .put(
+          `${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`,
+          requestOptions.body
+        )
         .catch((err) => console.log(`Failed Updating of Event`, err));
     },
   },
