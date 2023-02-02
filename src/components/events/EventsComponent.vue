@@ -2,7 +2,7 @@
   <div class="col-span-3">
     <SearchBarComponent :whatToSearch="'Events'" @searched="onSearched" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-      <CrudEventComponent
+      <CrudEventComponent v-if="myUser.roleType.name == 'Admin'"
         :eventData="''"
         CreateOrUpdate="Create"
         :EventId="0"
@@ -23,6 +23,7 @@ import EventCardComponent from '@/components/events/EventCardComponent.vue';
 import CrudEventComponent from './EventModalComponent.vue';
 import { ref, watch } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 
 export default {
   name: 'Events',
@@ -44,9 +45,11 @@ export default {
   },
   setup() {
     const search = ref('');
+    const store = useStore();
 
     return {
       search,
+      myUser: store.state.myUser,
     };
   },
   data() {

@@ -1,27 +1,35 @@
 <template>
-  <div class="w-full mb-3">
-    <button @click="$router.go(-1)" class="hover:underline text-primary-orange">
-      Go back
-    </button>
-  </div>
-  <div class="grid">
-    <h1 class="col md:col-span-2 text-4xl text-primary-orange">
-      {{ recordingDevice.name }}
-      <span class="text-sm text-white text-opacity-40">{{
-        recordingDevice.role
-      }}</span>
-    </h1>
-    <div class="col grid mt-2">
-      <span class="text-lg">{{ recordingDevice?.placementName }}</span>
+  <TheNavigation />
+  <main class="container mx-auto py-6">
+    <div class="w-full mb-3">
+      <button
+        @click="$router.go(-1)"
+        class="hover:underline text-primary-orange"
+      >
+        Go back
+      </button>
     </div>
-  </div>
+    <div class="grid">
+      <h1 class="col md:col-span-2 text-4xl text-primary-orange">
+        {{ recordingDevice.name }}
+        <span class="text-sm text-white text-opacity-40">{{
+          recordingDevice.role
+        }}</span>
+      </h1>
+      <div class="col grid mt-2">
+        <span class="text-lg">{{ recordingDevice?.placementName }}</span>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
 import axios from 'axios';
 import dayjs from 'dayjs';
+import TheNavigation from '@/components/shared/TheNavigation.vue';
 
 export default {
+  components: { TheNavigation },
   props: ['id'],
   name: 'RecordingDeviceDetails',
   methods: {

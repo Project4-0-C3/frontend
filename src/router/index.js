@@ -8,10 +8,17 @@ const routes = [
     name: 'Home',
     component: HomeView,
   },
+
+  // GROUPS AND THEIR USERS
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginView.vue'),
+  },
   
   // ADMIN
   {
-    path: '/admin/home',
+    path: '/events',
     name: 'AdminHome',
     component: () => import('../views/AdminView.vue'),
   },
