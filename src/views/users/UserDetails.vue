@@ -1,4 +1,6 @@
 <template>
+  <TheNavigation />
+  <main class="container mx-auto py-6">
   <div class="w-full mb-3">
     <button @click="$router.go(-1)" class="hover:underline text-primary-orange">Go back</button>
   </div>
@@ -10,13 +12,15 @@
     <span class="text-lg">{{ user.email }}</span>
     
   </div>
-  </div>
+  </div></main>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import TheNavigation from '@/components/shared/TheNavigation.vue';
 
 export default {
+  components: {TheNavigation},
   props: ['id'],
   name: 'UserDetails',
   methods: {

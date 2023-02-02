@@ -1,4 +1,6 @@
 <template>
+  <TheNavigation />
+  <main class="container mx-auto py-6">
   <!-- <p v-for="user in users">{{ user.firstName }}</p> -->
   <div class="flex flex-col mx-10">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -110,16 +112,18 @@
             </button>
             <button @click="nextPage" class="mx-2 px-2 text-blue-100 bg-primary-orange rounded hover:bg-opacity-70">next</button>
           </div> -->
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
   <!-- <div v-for="item in paginatedData" :key="item.index">{{ item.value }}</div> -->
 </template>
 <script>
 import SearchBarComponent from "@/components/shared/SearchBarComponent.vue";
 import RoleSearchBarCompponent from "@/components/shared/RoleSearchBarComponent.vue";
 import ManageUserModalComponent from "@/components/users/ManageUserModalComponent.vue";
+import TheNavigation from '@/components/shared/TheNavigation.vue';
 import axios from "axios";
 import { ref } from "vue";
 import handlePagination from "./HandlePaginationComponent";
@@ -129,6 +133,7 @@ export default {
     SearchBarComponent,
     RoleSearchBarCompponent,
     ManageUserModalComponent,
+    TheNavigation,
   },
 
   methods: {
@@ -144,12 +149,12 @@ export default {
       this.GetUsers();
     },
     GetUsers() {
-      axios.get(process.env.VUE_APP_BASE_URL + "User").then((res) => {
+      axios.get(process.env.VUE_APP_BASE_URL + 'User').then((res) => {
         this.users = res.data;
       });
     },
     GetRoles() {
-      axios.get(process.env.VUE_APP_BASE_URL + "RoleType").then((res) => {
+      axios.get(process.env.VUE_APP_BASE_URL + 'RoleType').then((res) => {
         this.roles = res.data;
       });
     },
@@ -162,6 +167,7 @@ export default {
       } else {
         _user = { ...user, roleTypeId: 2 };
         user.roleType.name = "Teamlead";
+
         user.roleTypeId = 2;
       }
       axios.put(`${process.env.VUE_APP_BASE_URL}User/${id}`, _user);
@@ -175,8 +181,8 @@ export default {
     },
   },
   setup() {
-    const search = ref("");
-    const roleSearch = ref("");
+    const search = ref('');
+    const roleSearch = ref('');
     // const handlePaginationValue = handlePagination(this.users);
 
     // return { ...handlePaginationValue, search };
@@ -195,7 +201,7 @@ export default {
     filteredUsers() {
       return this.users.filter(
         (user) =>
-          ((user.firstName + " " + user.lastName)
+          ((user.firstName + ' ' + user.lastName)
             .toLowerCase()
             .includes(this.search.toLowerCase()) ||
             user.email.toLowerCase().includes(this.search.toLowerCase())) &&

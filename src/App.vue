@@ -1,19 +1,20 @@
 import Navigation from './components/Navigation.vue';
 
 <template>
-  <TheNavigation />
-  <main class="container mx-auto py-6">
+  <!-- <TheNavigation />
+  <main :class="$route.path == '/login' ? '' : 'container mx-auto py-6'">
     <router-view />
-  </main>
+  </main> -->
+  <router-view />
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 import TheNavigation from './components/shared/TheNavigation.vue';
 export default {
   components: { TheNavigation },
 };
-
-
 </script>
 
 <style>
@@ -25,7 +26,7 @@ export default {
 }
 
 #appColor {
-  background-color: #1E1E1E;
+  background-color: #1e1e1e;
 }
 
 nav a.router-link-exact-active {

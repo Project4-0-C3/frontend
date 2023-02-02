@@ -80,6 +80,7 @@
                         :disabled="
                           incidentRecordings.includes(mic.recordingDeviceId)
                         "
+                        :title="incidentRecordings.includes(mic.recordingDeviceId) ? 'There are eventRecordings with this microphone' : ''"
                         class="w-4 h-4"
                       />
                       <label for="checkbox-table-search-1" class="sr-only"
