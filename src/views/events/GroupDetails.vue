@@ -1,4 +1,6 @@
 <template>
+  <TheNavigation />
+  <main class="container mx-auto py-6">
   <div class="w-full mb-3">
     <button @click="$router.go(-1)" class="hover:underline text-primary-orange">
       Go back
@@ -22,15 +24,16 @@
         />
       </div>
     </div>
-  </div>
+  </div></main>
 </template>
 
 <script>
 import EventRecordingDeviceCardComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
 import axios from 'axios';
+import TheNavigation from '@/components/shared/TheNavigation.vue';
 
 export default {
-  components: { EventRecordingDeviceCardComponent },
+  components: { EventRecordingDeviceCardComponent, TheNavigation },
   props: ['id'],
   name: 'GroupDetails',
   methods: {

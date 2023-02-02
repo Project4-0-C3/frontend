@@ -1,15 +1,17 @@
 <template>
-  <div class="grid grid-cols-4 gap-6">
+  <TheNavigation />
+  <main class="container mx-auto py-6">
+  <div class="grid grid-cols-3 gap-6">
   <EventsComponent/>
-  <TeamleadsComponent/>
-</div>
+  <!-- <TeamleadsComponent/> -->
+</div></main>
 </template>
 
 <script>
 import EventsComponent from '@/components/events/EventsComponent.vue';
-import TeamleadsComponent from '@/components/teamleads/TeamleadsComponent.vue';
+import TheNavigation from '@/components/shared/TheNavigation.vue';
 export default {
   name: 'AdminHome',
-  components: { EventsComponent, TeamleadsComponent },
+  components: { EventsComponent, TheNavigation },
 };
 </script>
