@@ -13,7 +13,6 @@
       <p class="mt-4 col">{{ event?.description }}</p>
     </div>
   </template>
-  <div v-if="!event">Kak</div>
 </template>
 
 <script>
