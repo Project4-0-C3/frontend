@@ -36,8 +36,15 @@
         </router-link>
 
         <router-link
-          v-if="myUser.roleType.name != 'Guest'"
+          v-if="myUser.roleType.name == 'Admin'"
           to="/events"
+          class="font-bold text-gray-100 hover:text-primary-orange"
+        >
+          Events
+        </router-link>
+        <router-link
+          v-if="myUser.roleType.name == 'Guard' || myUser.roleType.name == 'Teamlead'"
+          to="/myEvents"
           class="font-bold text-gray-100 hover:text-primary-orange"
         >
           Events
