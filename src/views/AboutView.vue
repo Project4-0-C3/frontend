@@ -2,27 +2,27 @@
   <TheNavigation />
   <main class="container mx-auto py-6">
   <h1 class="text-4xl text-primary-orange">CrowdCtrl</h1>
-  <h2>TEAM C3</h2>
-  <ul>
-    <li>
+  <h2 class="py-3">TEAM C3</h2>
+  <ul class="list">
+    <li class="list-outside">
       APP
-      <ul>
-        <li>Jari Van de Vel</li>
-        <li>Renzo Beeckmans</li>
+      <ul class="list">
+        <li class="list-inside list-disc">Jari Van de Vel</li>
+        <li class="list-inside list-disc">Renzo Beeckmans</li>
       </ul>
     </li>
-    <li>
+    <li class="list-outside">
       AI
-      <ul>
-        <li>Robin Ramaekers</li>
-        <li>Lenn van Genechten</li>
+      <ul class="list-inside list-disc">
+        <li class="list-inside list-disc">Robin Ramaekers</li>
+        <li class="list-inside list-disc">Lenn van Genechten</li>
       </ul>
     </li>
-    <li>
+    <li class="list-outside">
       CCS
-      <ul>
-        <li>Tim Verbecque</li>
-        <li>Jesse Dierckx</li>
+      <ul class="list">
+        <li class="list-inside list-disc">Tim Verbecque</li>
+        <li class="list-inside list-disc">Jesse Dierckx</li>
       </ul>
     </li>
   </ul></main>

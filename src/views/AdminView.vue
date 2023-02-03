@@ -1,6 +1,6 @@
 <template>
   <TheNavigation />
-  <main class="container mx-auto py-6">
+  <main class="container mx-auto p-6">
   <div class="grid grid-cols-3 gap-6">
   <EventsComponent/>
   <!-- <TeamleadsComponent/> -->
