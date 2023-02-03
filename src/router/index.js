@@ -23,6 +23,11 @@ const routes = [
     component: () => import('../views/AdminView.vue'),
   },
   {
+    path: '/myEvents',
+    name: 'MyEvents',
+    component: () => import('../views/events/MyEvents.vue'),
+  },
+  {
     path: '/admin/users',
     name: 'AdminUsers',
     component: () => import('../views/users/UsersView.vue'),
