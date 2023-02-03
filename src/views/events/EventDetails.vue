@@ -145,6 +145,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useStore } from 'vuex';
 import TheNavigation from '@/components/shared/TheNavigation.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -163,7 +164,7 @@ export default {
       axios
         .get(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
         .then((res) => (this.event = res.data))
-        .catch((err) => console.log('retrieve event: ', err));
+        .catch((err) =>{ console.log('retrieve event: ', err), this.router.push('/');});
     },
     formatDate(dateString) {
       const date = dayjs(dateString);
@@ -179,6 +180,7 @@ export default {
     },
   },
   setup(props) {
+    const router = useRouter();
     const store = useStore();
     const checkedGuards = ref([]);
     const checkedMics = ref([]);

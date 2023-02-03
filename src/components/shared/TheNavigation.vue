@@ -26,7 +26,7 @@
       <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
       <ul
         :class="showMenu ? 'flex' : 'hidden'"
-        class="flex-col mt-8 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0"
+        class="text-center flex-col mt-8 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0"
       >
         <router-link
           to="/"
@@ -70,13 +70,13 @@
           class="font-bold text-gray-100 hover:text-primary-orange"
           >Login
         </router-link>
-        <button
+        <a
           v-if="myUser.roleType.name != 'Guest'"
-          class="font-bold text-gray-100 hover:text-primary-orange"
+          class="font-bold text-gray-100 hover:text-primary-orange cursor-pointer"
           @click="Logout()"
         >
           Logout
-        </button>
+        </a>
       </ul>
     </nav>
   </div>

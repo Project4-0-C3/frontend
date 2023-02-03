@@ -1,5 +1,5 @@
 <template>
-  <TheNavigation class="absolute z-10 w-full bg-opacity-70"/>
+  <TheNavigation class="absolute z-10 w-full bg-opacity-70" />
   <section class="min-h-screen flex items-stretch text-white">
     <div
       class="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover bg-center relative items-center"
@@ -13,7 +13,7 @@
           Keep it special
         </h1>
         <p class="text-3xl my-4">
-          Monitor your personal memories in a safe way, anywhere.
+          Monitor your memories in a safe way, anywhere.
         </p>
       </div>
     </div>
@@ -81,7 +81,7 @@ import { useStore } from 'vuex';
 import TheNavigation from '@/components/shared/TheNavigation.vue';
 
 export default {
-  components: {TheNavigation},
+  components: { TheNavigation },
   setup() {
     const store = useStore();
 
@@ -121,9 +121,10 @@ export default {
           this.updateMyUser(res.data);
         })
 
-        .catch((this.error = true));
-
-      this.router.push('/');
+        .catch((err) => ((this.error = true), console.log(err)));
+      if (!this.error) {
+        this.router.push('/');
+      }
     },
   },
 };
