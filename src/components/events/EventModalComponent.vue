@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <div
-      class="block rounded-lg shadow-lg bg-primary-gray bg-opacity-60 hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 h-full w-full"
+      class="w-52 rounded-lg shadow-lg bg-primary-gray bg-opacity-60 hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 h-full"
     >
       <button
         v-if="CreateOrUpdate == 'Create'"

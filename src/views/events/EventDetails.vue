@@ -24,6 +24,7 @@
       </div>
       <!-- <EventDetailsComponent :Event="event"/> -->
       <EventModalComponent
+        class="mt-4"
         v-if="myUser.roleType.name == 'Admin'"
         :event="event"
         CreateOrUpdate="Update"
@@ -102,11 +103,6 @@
               :recordingDevice="e"
             />
           </div>
-          <template v-if="event.eventRecordingDevices?.length <= 0">
-            <div class="text-red-500">
-              ADD RECORDINGDEVICES SHOULD COME HERE IF NO RECORDINGDEVICES
-            </div>
-          </template>
         </div>
         <div class="col-span-2">
           <h2 class="text-xl text-primary-orange mb-2">
@@ -122,11 +118,6 @@
               class="aspect-square"
             />
           </div>
-          <template v-if="event.groups?.length <= 0">
-            <div class="text-red-500">
-              ADD GROUPS SHOULD COME HERE IF NO GROUPS
-            </div>
-          </template>
         </div>
       </div>
     </div>
@@ -164,7 +155,9 @@ export default {
       axios
         .get(`${process.env.VUE_APP_BASE_URL}Event/${this.id}`)
         .then((res) => (this.event = res.data))
-        .catch((err) =>{ console.log('retrieve event: ', err), this.router.push('/');});
+        .catch((err) => {
+          console.log('retrieve event: ', err), this.router.push('/');
+        });
     },
     formatDate(dateString) {
       const date = dayjs(dateString);
