@@ -19,7 +19,7 @@ import axios from 'axios';
 export default {
   props: ['alrSelected'],
   methods: {
-    GetRoles() {
+    GetEventTypes() {
       axios.get(`${process.env.VUE_APP_BASE_URL}EventType`).then((res) => {
         this.eventTypes = res.data;
       });
@@ -32,10 +32,11 @@ export default {
     return { eventTypes: [] };
   },
   mounted() {
-    this.GetRoles();
+    this.GetEventTypes();
   },
   setup(props) {
     const selected = ref(props.alrSelected ? props.alrSelected : '');
+    console.log(props?.alrSelected)
     return { selected };
   },
   emits: ['selectedEventType'],
