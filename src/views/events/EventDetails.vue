@@ -10,15 +10,20 @@
       </button>
     </div>
     <div class="grid">
-      <h1 class="col text-4xl text-primary-orange">
-        {{ event.name }}
+      <h1 class="col flex justify-between text-4xl text-primary-orange">
+        <div class="grid grid-cols-1">
+          <span class="col">{{ event.name }}</span>
+          <span class="col text-xl text-white text-opacity-40">{{ event.eventType?.name }}</span>
+        </div> 
+        <!-- <StartStopComponent/> -->
+        
       </h1>
-      <h2 class="col text-xl mb-6 text-white text-opacity-40">
+      <!-- <h2 class="col text-xl mb-6 text-white text-opacity-40">
         {{ event.eventType?.name }}
-      </h2>
-      <div class="grid">
+      </h2> -->
+      <div class="grid mt-6">
         <span class="col">{{ formatDate(event?.date) }}</span>
-        <span class="col">{{ formatHour(event?.date) }}</span>
+        <!-- <span class="col">{{ formatHour(event?.date) }}</span> -->
         <span class="col">{{ event.location }}</span>
         <p class="mt-4 col">{{ event.description }}</p>
       </div>
@@ -137,9 +142,11 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 import TheNavigation from '@/components/shared/TheNavigation.vue';
 import { useRouter } from 'vue-router';
+import StartStopComponent from '@/components/events/StartStopComponent.vue';
 
 export default {
   components: {
+    StartStopComponent,
     UserCardComponent,
     RecordingDeviceComponent,
     GroupCardComponent,

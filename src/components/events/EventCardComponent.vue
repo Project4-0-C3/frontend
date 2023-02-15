@@ -38,7 +38,7 @@ export default {
     formatDate(dateString) {
       const date = dayjs(dateString);
       // Then specify how you want your dates to be formatted
-      return date.format('DD/MM/YYYY - HH:mm');
+      return date.format('DD/MM/YYYY');
     },
   },
 };
