@@ -25,10 +25,11 @@
       <!-- <EventDetailsComponent :Event="event"/> -->
       <EventModalComponent
         class="mt-4"
-        v-if="myUser.roleType.name == 'Admin'"
+        v-if="myUser.roleType.name == 'Admin'" 
         :event="event"
         CreateOrUpdate="Update"
         :EventId="Id"
+        @Reload="reload"
       />
 
       <div class="col mt-4">
@@ -158,6 +159,9 @@ export default {
         .catch((err) => {
           console.log('retrieve event: ', err), this.router.push('/');
         });
+    },
+    reload() {
+      this.getDetails();
     },
     formatDate(dateString) {
       const date = dayjs(dateString);

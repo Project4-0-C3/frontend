@@ -53,7 +53,7 @@
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
               id="name"
               type="text"
-              v-model="eventData.name"
+              v-model="eventInfo.name"
               placeholder="Name"
             />
 
@@ -61,13 +61,13 @@
               required
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
               id="date"
-              type="datetime-local"
-              v-model="eventData.date"
+              type="date"
+              v-model="eventInfo.date"
             />
             <EventTypeSelectComponent
               @selected-event-type="selectEvent"
               required
-              :alrSelected="eventData.eventTypeId"
+              :alrSelected="eventInfo.eventTypeId" v-if="eventInfo.eventTypeId"
             />
             <input
               required
@@ -75,15 +75,15 @@
               id="address"
               type="text"
               placeholder="Address"
-              v-model="eventData.location"
+              v-model="eventInfo.location"
             />
-
+            
             <input
               required
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
               id="description"
               type="text"
-              v-model="eventData.description"
+              v-model="eventInfo.description"
               placeholder="Description"
             />
           </div>
@@ -96,7 +96,7 @@
           </button>
 
           <button
-            @click="SaveChanges(eventData)"
+            @click="SaveChanges(eventInfo)"
             class="px-6 py-2 ml-2 text-blue-100 bg-primary-orange rounded hover:bg-opacity-70"
           >
             {{ CreateOrUpdate }} Event
@@ -109,43 +109,77 @@
 
 <script>
 import { ref } from 'vue';
+import dayjs from 'dayjs';
 import EventTypeSelectComponent from '../shared/EventTypeSelectComponent.vue';
 import axios from 'axios';
 export default {
   components: { EventTypeSelectComponent },
   props: ['event', 'CreateOrUpdate', 'EventId'],
   setup(props) {
+    // const event = ref([
+    //   props.event?.name,
+    //   props.event?.date,
+    //   props.event?.location,
+    //   props.event?.description,
+    //   props.event?.eventTypeId
+    // ]);
+    
     const Id = props.EventId;
     const CreateOrUpdate = props.CreateOrUpdate;
-    const eventInfo = props.event;
+    // const eventInfo = props?.event;
+    const eventInfo = {};
 
-    return { eventInfo, CreateOrUpdate, Id };
+    // const formName = props?.eventInfo.name;
+
+    return { eventInfo, CreateOrUpdate, Id, event};
+  },
+  async mounted() {
+    await this.getDetails();
   },
 
   data() {
     return {
       isOpen: false,
-      eventData: {
-        eventId: this.eventInfo ? this.eventInfo.eventId : 0,
-        name: this.eventInfo ? this.eventInfo.name : '',
-        date: this.eventInfo
-          ? this.eventInfo.date
-          : new Date().toISOString().substr(0, 10),
-        location: this.eventInfo ? this.eventInfo.location : '',
-        eventTypeId: this.eventInfo ? this.eventInfo.eventTypeId : 0,
-        description: this.eventInfo ? this.eventInfo.description : '',
-      },
+      // eventData: {
+      //   eventId: this.eventInfo ? this.eventInfo.eventId : 0,
+      //   name: this.eventInfo ? this.eventInfo?.name : '',
+      //   date: this.eventInfo
+      //     ? this.eventInfo.date
+      //     : new Date().toISOString().substr(0, 10),
+      //   location: this.eventInfo ? this.eventInfo.location : '',
+      //   eventTypeId: this.eventInfo ? this.eventInfo.eventTypeId : 0,
+      //   description: this.eventInfo ? this.eventInfo.description : '',
+      // },
     };
   },
 
   methods: {
+    reload() {
+      this.$emit('reload')
+    },
+    getDetails() {
+      if(this.Id != 0){
+        axios
+        .get(`${process.env.VUE_APP_BASE_URL}Event/${this.Id}`)
+        .then((res) => (this.eventInfo = res.data, this.eventInfo.date=this.formatDate(res.data.date)))
+        .catch((err) => {
+          console.log('retrieve event: ', err), this.router.push('/');
+        });
+      }
+    },
+    formatDate(dateString) {
+      const date = dayjs(dateString);
+      // Then specify how you want your dates to be formatted
+      
+      return date.format('YYYY-MM-DD');
+    },
     selectEvent(newData) {
-      this.eventData.eventTypeId = newData;
-      console.log(this.eventData);
+      this.eventInfo.eventTypeId = newData;
+      console.log(this.eventInfo);
     },
 
     SaveChanges(eventInformation) {
-      if (eventInformation.eventId != 0) {
+      if (this.EventId != 0) {
         this.UpdateEvent(eventInformation);
       } else {
         this.CreateEvent(eventInformation);
@@ -186,10 +220,15 @@ export default {
       };
       axios
         .put(
-          `${process.env.VUE_APP_BASE_URL}Event/${this.eventData.eventId}`,
+          `${process.env.VUE_APP_BASE_URL}Event/${this.EventId}`,
           requestOptions.body
         )
         .catch((err) => console.log(`Failed Updating of Event`, err));
+
+        setTimeout(() => {
+        this.reload();
+        this.isOpen = false;
+      }, 500)
     },
   },
 };

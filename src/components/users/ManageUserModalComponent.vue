@@ -53,7 +53,6 @@
             placeholder="First name"
            
           />
-          {{ props?.userData.firstName }}
           <input
             required
             class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
