@@ -1,7 +1,6 @@
 <template>
-  <router-link
-    :to="{ name: 'UserDetails', params: { id: user.userId } }"
-    class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
+  <div
+    class="block p-2 rounded-lg shadow-lg bg-primary-gray "
   >
     <h5 class="leading-tight text-primary-orange">
       {{ user.firstName }} {{ user.lastName }}
@@ -12,7 +11,7 @@
     <p class="text-base">
       {{ user.email }}
     </p>
-  </router-link>
+  </div>
 </template>
 
 <script>

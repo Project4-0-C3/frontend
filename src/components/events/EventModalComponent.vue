@@ -1,7 +1,8 @@
 <template>
   <div class="container mx-auto">
     <div
-      class="w-52 rounded-lg shadow-lg bg-primary-gray bg-opacity-60 hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 h-full"
+    :class="CreateOrUpdate != 'Create' ? 'w-52' : ''"
+      class=" rounded-lg shadow-lg bg-primary-gray bg-opacity-60 hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200 h-full"
     >
       <button
         v-if="CreateOrUpdate == 'Create'"
@@ -14,7 +15,7 @@
       <button
         v-if="CreateOrUpdate != 'Create'"
         @click="isOpen = true"
-        class="leading-tight text-primary-orange h-full w-full p-2 rounded-lg"
+        class="w-52 leading-tight text-primary-orange h-full  p-2 rounded-lg"
         type="button"
       >
         {{ CreateOrUpdate }} Event
