@@ -17,7 +17,7 @@
           <span class="col text-xl text-white text-opacity-40">{{ event.eventType?.name }}</span>
         </div> 
 
-        <StartStopComponent :event="event" :eventId="Id" />
+        <StartStopComponent v-if="myUser.roleType.name == 'Teamlead' || myUser.roleType.name == 'Admin'" :event="event" :eventId="Id" />
 
       </h1>
       <!-- <h2 class="col text-xl mb-6 text-white text-opacity-40">
@@ -120,7 +120,8 @@
             </span>
           </h2>
           <div class="grid grid-cols-6 gap-2">
-            <ZoneCardComponent
+            <CreateZoneComponent v-if="myUser.roleType.name == 'Teamlead' || myUser.roleType.name == 'Admin'" :EventId="Id" @newZone="addNewZoneToList"  />
+            <ZoneCardComponent @removeZone="removeZoneFromList"
               v-for="e in event.zones"
               :zone="e"
               class="aspect-square"
@@ -146,9 +147,11 @@ import { useStore } from 'vuex';
 import TheNavigation from '@/components/shared/TheNavigation.vue';
 import { useRouter } from 'vue-router';
 import StartStopComponent from '@/components/events/StartStopComponent.vue';
+import CreateZoneComponent from '@/components/groups/CreateZoneComponent.vue';
 
 export default {
   components: {
+    CreateZoneComponent,
     StartStopComponent,
     UserCardComponent,
     RecordingDeviceComponent,
@@ -168,6 +171,13 @@ export default {
         .catch((err) => {
           console.log('retrieve event: ', err), this.router.push('/');
         });
+    },
+    addNewZoneToList(zone){
+      this.event.zones.push(zone)
+    },
+    removeZoneFromList(zone){
+      const index = this.event.zones.indexOf(zone) 
+      this.event.zones.splice(index, 1)
     },
     reload() {
       this.getDetails();

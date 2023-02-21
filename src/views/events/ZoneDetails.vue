@@ -16,57 +16,137 @@
       </h1>
       <div class="col grid mt-6">
         <h2 class="text-xl text-primary-orange mb-2">
-          Microphones
+          Unnassigned Microphones
           <span class="text-xs text-white text-opacity-40">
-            {{ zone.eventRecordingDevices?.length }} Microphones
+            {{ unassignedMics?.length }} Microphones
           </span>
         </h2>
         <div class="grid grid-cols-6 xl:grid-cols-8 gap-2">
-          <ZoneMicModalComponent :ZoneId="zone.zoneId" :RD="zone.event?.eventRecordingDevices" />
           <ZoneEventRecordingDeviceCardComponent
-            v-for="rd in zone.eventRecordingDevices"
+            v-for="rd in unassignedMics"
+            :zoneId="zone.zoneId"
+            @updateDevice="updateDevice"
             :recordingDevice="rd"
           />
         </div>
       </div>
+      <div class="col grid mt-6">
+        <h2 class="text-xl text-primary-orange mb-2">
+          Assigned Microphones
+          <span class="text-xs text-white text-opacity-40">
+            {{ assignedMics?.length }} Microphones
+          </span>
+        </h2>
+        <div class="grid grid-cols-6 xl:grid-cols-8 gap-2">
+          <ZoneEventRecordingDeviceCardComponent
+            :zoneId="zone.zoneId"
+            @updateDevice="updateDevice"
+            v-for="rd in assignedMics"
+            :recordingDevice="rd"
+          />
+        </div>
+      </div>
+      <div class="col grid mt-6">
+        <h2 class="text-xl text-primary-orange mb-2">
+          Unnassigned Guards
+          <span class="text-xs text-white text-opacity-40">
+            {{ unassignedUsers?.length }} Guards
+          </span>
+        </h2>
+        <div class="grid grid-cols-4 xl:grid-cols-8 gap-2">
+          <ZoneEventUserCardComponent
+            :zoneId="zone.zoneId"
+            @updateUser="updateUser"
+            v-for="g in unassignedUsers"
+            :guard="g"
+          />
+        </div>
+      </div>
+      <div class="col grid mt-6">
+        <h2 class="text-xl text-primary-orange mb-2">
+          Assigned Guards
+          <span class="text-xs text-white text-opacity-40">
+            {{ assignedUsers?.length }} Guards
+          </span>
+        </h2>
+        <div class="grid grid-cols-4 xl:grid-cols-8 gap-2">
+          <ZoneEventUserCardComponent
+            :zoneId="zone.zoneId"
+            @updateUser="updateUser"
+            v-for="g in assignedUsers"
+            :guard="g"
+          />
+        </div>
+      </div>
     </div>
-
-    {{ zone.event }}
   </main>
 </template>
 
 <script>
 import ZoneEventRecordingDeviceCardComponent from '@/components/microphones/ZoneEventRecordingDeviceCardComponent.vue';
+import ZoneEventUserCardComponent from '@/components/microphones/ZoneEventUserCardComponent.vue';
 import axios from 'axios';
 import TheNavigation from '@/components/shared/TheNavigation.vue';
-import ZoneMicModalComponent from '@/components/microphones/ZoneMicModalComponent.vue';
 
 export default {
   components: {
+    ZoneEventUserCardComponent,
     ZoneEventRecordingDeviceCardComponent,
     TheNavigation,
-    ZoneMicModalComponent,
   },
   props: ['id'],
   name: 'GroupDetails',
+  setup(props) {
+    const Id = props.id;
+    return { Id };
+  },
   methods: {
+    async updateDevice(device) {
+      const index = this.zone.event?.eventRecordingDevices.indexOf(device);
+     this.zone.event?.eventRecordingDevices[index] == device;
+      // this.zone.event?.eventRecordingDevices.push(device);
+    },
+    updateUser(user) {
+      const index = this.zone.event?.eventUsers.indexOf(user);
+      // this.zone.event?.eventUsers[index] == user;
+      this.zone.event?.eventUsers.splice(index, 1);
+      this.zone.event?.eventUsers.push(user);
+    },
     getDetails() {
-      // fetch(`https://localhost:7100/api/zone/${this.id}`)
-      //   .then((res) => res.json())
-      //   .then((data) => (this.zone = data))
       axios
         .get(`${process.env.VUE_APP_BASE_URL}zone/${this.id}`)
         .then((res) => (this.zone = res.data))
         .catch((err) => console.log('retrieve zone: ', err));
-      // console.log('mounted')
     },
   },
   data() {
-    // console.log('data')
     return { zone: {} };
   },
   async mounted() {
     await this.getDetails();
+  },
+
+  computed: {
+    unassignedMics() {
+      return this.zone.event?.eventRecordingDevices.filter(
+        (device) => device.zoneId == null
+      );
+    },
+    assignedMics() {
+      return this.zone.event?.eventRecordingDevices.filter(
+        (device) => device.zoneId != null
+      );
+    },
+    unassignedUsers() {
+      return this.zone.event?.eventUsers.filter(
+        (device) => device.zoneId == null
+      );
+    },
+    assignedUsers() {
+      return this.zone.event?.eventUsers.filter(
+        (device) => device.zoneId == this.Id
+      );
+    },
   },
 };
 </script>

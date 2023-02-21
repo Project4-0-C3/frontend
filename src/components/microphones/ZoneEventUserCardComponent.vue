@@ -1,14 +1,17 @@
 <template>
-  <button
-    @click="isOpen = true"
+  <button @click="isOpen = true"
     class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
   >
     <h5 class="leading-tight text-primary-orange">
-      {{ mic.recordingDevice?.name }}
+      {{ user.user?.firstName }} {{ user.user?.lastName }}
       <span class="text-xs text-white text-opacity-40">
-        {{ mic.placementName ? mic.placementName : '' }}</span
+        {{ user.user?.roleTypeId == 2 ? 'TeamLead' : 'Guard' }}</span
       >
     </h5>
+    <p class="text-base truncate">
+      {{ user.user?.email }}
+    </p>
+  
   </button>
 
   <div
@@ -17,7 +20,7 @@
   >
     <div class="max-w-2xl p-6 bg-primary-gray rounded-md shadow-xl">
       <div class="flex items-center justify-between">
-        <h3 class="text-2xl">{{ mic.recordingDevice?.name }}</h3>
+        <h3 class="text-2xl"> {{ user.user?.firstName }} {{ user.user?.lastName }}</h3>
 
         <svg
           @click="isOpen = false"
@@ -36,28 +39,7 @@
         </svg>
       </div>
 
-      <div class="my-4">
-        <input
-          type="text"
-          name="placementName"
-          id="placementName"
-          placeholder="place"
-          class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
-          v-model="mic.placementName"
-        />
-        <div class="flex items-center">
-          <input
-            :checked="mic.recordingDevice?.zoneId != null"
-            v-model="checkedmic"
-            id="checkbox-all-search"
-            type="checkbox"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-primary-orange focus:ring-1"
-          />
-          <label for="checkbox-all-search" class="ml-2">in zone</label>
-        </div>
-        
-      </div>
-      <div class="justify-between flex">
+      <div class="justify-between flex mt-4">
         <button
           @click="isOpen = false"
           class="px-6 py-2 text-primary-orange border border-primary-orange rounded hover:bg"
@@ -69,7 +51,7 @@
           @click="saveChanges"
           class="px-6 py-3 ml-2 bg-primary-orange rounded hover:bg-opacity-70"
         >
-          Save Changes
+          {{ user.zoneId == null ? 'Add to zone' : 'Remove from zone' }}
         </button>
       </div>
     </div>
@@ -81,17 +63,16 @@ import axios from 'axios';
 import { ref, emit } from 'vue';
 
 export default {
-  props: ['recordingDevice', 'add', 'zoneId'],
+  props: ['guard', 'add', 'zoneId'],
   setup(props) {
-    const mic = props?.recordingDevice;
+    const user = props?.guard;
     const isOpen = ref(false);
     const add = ref(props?.add);
     const ZoneId = props.zoneId;
-    const checkedmic = ref(props.recordingDevice?.zoneId == null ? false : true)
 
-    return { mic, isOpen, add, ZoneId, checkedmic };
+    return { user, isOpen, add, ZoneId };
   },
-  emits: ['updateDevice'],
+  emits: ['updateDevice', "updateUser"],
 
   methods: {
     AddRemoveZone() {},
@@ -99,28 +80,24 @@ export default {
       const requestOptions = {
         headers: { 'Content-Type': 'application/json' },
         body: {
-          eventRecordingDeviceId: this.mic.eventRecordingDeviceId,
-          placementName: this.mic.placementName ? this.mic.placementName : null,
-          zoneId: this.checkedmic ? this.ZoneId : null,
-          eventId: this.mic.eventId,
-          recordingDeviceId: this.mic.recordingDeviceId,
-          recordingDevice: this.mic.recordingDevice,
+          ...this.user,
+          zoneId : this.user.zoneId == null ? this.ZoneId : null
         },
       };
       axios
         .put(
-          `${process.env.VUE_APP_BASE_URL}EventRecordingDevice/${this.mic.eventRecordingDeviceId}`,
+          `${process.env.VUE_APP_BASE_URL}EventUser/${this.user.eventUserId}`,
           requestOptions.body
         )
         .then(
           (response) => (
             console.log(response),
             (this.isOpen = false),
-            this.$emit('updateDevice', requestOptions.body)
+            this.$emit('updateUser', requestOptions.body)
           )
         )
         .catch((err) =>
-          console.log(`Failed Updating of EventRecordingDevice: `, err)
+          console.log(`Failed Updating of EventUser: `, err)
         );
     },
   },
