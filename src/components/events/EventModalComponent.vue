@@ -132,7 +132,7 @@ export default {
 
     // const formName = props?.eventInfo.name;
 
-    return { eventInfo, CreateOrUpdate, Id, event};
+    return { eventInfo, CreateOrUpdate, Id};
   },
   async mounted() {
     await this.getDetails();
