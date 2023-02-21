@@ -33,6 +33,11 @@ const routes = [
     component: () => import('../views/users/UsersView.vue'),
   },
   {
+    path: '/admin/recordingdevices',
+    name: 'AdminRecordingDevices',
+    component: () => import('../components/microphones/RecordingDevicesView.vue'),
+  },
+  {
     path: '/user/:id',
     name: 'UserDetails',
     component: () => import('../views/users/UserDetails.vue'),

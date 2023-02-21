@@ -59,6 +59,11 @@
         >
           Users
         </router-link>
+        <router-link v-if="myUser.roleType.name == 'Admin'"
+        to="/admin/recordingdevices"
+        class="font-bold text-gray-100 hover:text-primary-orange">
+        Microphones
+        </router-link>
 
         <!-- <router-link
           to="/shouldRedirectToApi"
