@@ -60,12 +60,12 @@ const routes = [
   },
 
   // ZONES AND THEIR USERS
-  // {
-  //   path: '/zone/:id',
-  //   name: 'ZoneDetails',
-  //   component: () => import('../views/events/ZoneDetails.vue'),
-  //   props: true,
-  // },
+  {
+    path: '/zone/:id',
+    name: 'ZoneDetails',
+    component: () => import('../views/events/ZoneDetails.vue'),
+    props: true,
+  },
 
   // OTHER
   {

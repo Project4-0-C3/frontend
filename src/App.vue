@@ -8,14 +8,12 @@ import Navigation from './components/Navigation.vue';
   <router-view />
 </template>
 
-<script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
+<!-- <script>
 import TheNavigation from './components/shared/TheNavigation.vue';
 export default {
   components: { TheNavigation },
 };
-</script>
+</script> -->
 
 <style>
 #app {
