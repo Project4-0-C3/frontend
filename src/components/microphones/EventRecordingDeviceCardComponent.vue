@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="{ name: 'MicDetails', params: { id: mic.eventRecordingDeviceId } }"
-    class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
+    class="block p-2 rounded-lg shadow-lg bg-primary-gray "
   >
     <h5 class="leading-tight text-primary-orange">
       {{ mic.recordingDevice?.name }} <span class="text-xs text-white text-opacity-40">
