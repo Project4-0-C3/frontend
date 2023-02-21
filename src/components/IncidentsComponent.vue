@@ -32,15 +32,14 @@ export default {
   },
   methods: {
     async GetIncidents() {
-      // console.log(`${process.env.VUE_APP_BASE_URL}Incident`)
       this.polling = setInterval(() => {
         axios
-          .get(`${process.env.VUE_APP_BASE_URL}Incident?event=1`)
+          .get(`${process.env.VUE_APP_BASE_URL}Incident?event=${this.$route.params.id}`)
           .then((res) => {
             this.incidents = res.data;
           })
           .catch((err) => console.log(`Failed Getting incidents: `, err));
-      }, 3000);
+      }, 5000);
     },
 
     onMoodSearched(event) {

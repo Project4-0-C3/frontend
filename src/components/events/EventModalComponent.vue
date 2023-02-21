@@ -70,6 +70,12 @@
               required
               :alrSelected="eventInfo.eventTypeId" v-if="eventInfo.eventTypeId"
             />
+
+            <EventTypeSelectComponent
+              @selected-event-type="selectEvent"
+              required
+              :alrSelected="0" v-if="eventInfo.eventTypeId == null"
+            />
             <input
               required
               class="mb-4 shadow border sm:rounded-lg w-full py-2 px-3 text-primary-gray leading-tight"
