@@ -15,7 +15,7 @@
           <span class="col">{{ event.name }}</span>
           <span class="col text-xl text-white text-opacity-40">{{ event.eventType?.name }}</span>
         </div> 
-        <!-- <StartStopComponent/> -->
+        <StartStopComponent :event="event" :eventId="Id" />
         
       </h1>
       <!-- <h2 class="col text-xl mb-6 text-white text-opacity-40">

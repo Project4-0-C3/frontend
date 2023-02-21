@@ -72,7 +72,7 @@ export default {
   methods: {
     previous() {
         if(this.current_shown == 0){
-            this.current_shown = 3
+            this.current_shown = this.all_dashboards.length-1
         }
         else{
             this.current_shown -= 1;
@@ -80,7 +80,7 @@ export default {
         this.$forceUpdate();
     },
     next(){
-        if(this.current_shown == 3){
+        if(this.current_shown == this.all_dashboards.length-1){
             this.current_shown = 0;
         }
         else{
@@ -89,6 +89,7 @@ export default {
         this.$forceUpdate();
     },
     reload(){
+      this.current_shown = this.current_shown + 1 - 1
         this.$forceUpdate();
     }
   },
@@ -98,6 +99,9 @@ export default {
     const all_dashboards = [
       "var-mood_filter=2&from=1676896985338&to=1676898464083&var-Event_filter=3&panelId=10",
       "from=1676896985338&to=1676898464083&var-Event_filter=3&panelId=2",
+      "from=1676875741074&to=1676897341074&panelId=6",
+      "from=1676875778367&to=1676897378367&panelId=8",
+      "from=1676875893018&to=1676897493018&panelId=4"
     ];
     return { all_dashboards, current_shown };
   },
