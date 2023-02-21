@@ -1,0 +1,23 @@
+<template>
+  <router-link
+    :to="{ name: 'MicDetails', params: { id: mic.eventRecordingDeviceId } }"
+    class="block p-2 rounded-lg shadow-lg bg-primary-gray hover:bg-primary-orange hover:bg-opacity-40 hover:duration-200 duration-200"
+  >
+    <h5 class="leading-tight text-primary-orange">
+      {{ mic.recordingDevice?.name }} <span class="text-xs text-white text-opacity-40">
+        {{ mic.placementName ? mic.placementName : '' }}</span
+      >
+    </h5>
+  </router-link>
+</template>
+
+<script>
+export default {
+  props: ['recordingDevice'],
+  setup(props) {
+    const mic = props.recordingDevice;
+
+    return { mic }
+  },
+};
+</script>

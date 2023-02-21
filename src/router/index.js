@@ -55,9 +55,9 @@ const routes = [
 
   // GROUPS AND THEIR USERS
   {
-    path: '/groups/:id',
-    name: 'GroupDetails',
-    component: () => import('../views/events/GroupDetails.vue'),
+    path: '/zone/:id',
+    name: 'ZoneDetails',
+    component: () => import('../views/events/ZoneDetails.vue'),
     props: true,
   },
 

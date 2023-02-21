@@ -112,15 +112,15 @@
         </div>
         <div class="col-span-2">
           <h2 class="text-xl text-primary-orange mb-2">
-            Groups
+            Zones
             <span class="text-xs text-white text-opacity-40">
-              {{ event.groups?.length }} Groups
+              {{ event.zones?.length }} Zones
             </span>
           </h2>
           <div class="grid grid-cols-6 gap-2">
-            <GroupCardComponent
-              v-for="e in event.groups"
-              :group="e"
+            <ZoneCardComponent
+              v-for="e in event.zones"
+              :zone="e"
               class="aspect-square"
             />
           </div>
@@ -134,7 +134,7 @@
 import dayjs from 'dayjs';
 import UserCardComponent from '@/components/users/UserCardComponent.vue';
 import RecordingDeviceComponent from '@/components/microphones/EventRecordingDeviceCardComponent.vue';
-import GroupCardComponent from '@/components/groups/GroupCardComponent.vue';
+import ZoneCardComponent from '@/components/groups/ZoneCardComponent.vue';
 import UserModalComponent from '@/components/users/UserModalComponent.vue';
 import EventModalComponent from '@/components/events/EventModalComponent.vue';
 import MicModalComponent from '@/components/microphones/MicModalComponent.vue';
@@ -150,7 +150,7 @@ export default {
     StartStopComponent,
     UserCardComponent,
     RecordingDeviceComponent,
-    GroupCardComponent,
+    ZoneCardComponent,
     UserModalComponent,
     EventModalComponent,
     MicModalComponent,

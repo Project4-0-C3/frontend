@@ -50,7 +50,7 @@
                   <th scope="col" class="p-4">
                     <div class="flex items-center">
                       <input
-                        :checked="filteredMics.length == checkedMics.length"
+                        :checked="false"
                         @change="SelectAll()"
                         id="checkbox-all-search"
                         type="checkbox"
@@ -64,7 +64,6 @@
                   <th scope="col" class="px-6 py-3">Name</th>
                 </tr>
               </thead>
-
               <tbody>
                 <tr
                   v-for="mic in filteredMics"
@@ -76,11 +75,6 @@
                         :id="mic.eventRecordingDeviceId"
                         :value="mic.eventRecordingDeviceId"
                         type="checkbox"
-                        v-model="checkedMics"
-                        :disabled="
-                          incidentRecordings.includes(mic.eventRecordingDeviceId)
-                        "
-                        :title="incidentRecordings.includes(mic.eventRecordingDeviceId) ? 'There are eventRecordings with this microphone' : ''"
                         class="w-4 h-4"
                       />
                       <label for="checkbox-table-search-1" class="sr-only"
@@ -107,11 +101,12 @@
           </button>
 
           <button
-            @click="SaveChanges"
+            @click=""
             class="px-6 py-2 ml-2 text-blue-100 bg-primary-orange rounded hover:bg-opacity-70"
           >
             Save Changes
           </button>
+          {{ RecordingDevices }}
         </div>
       </div>
     </div>
@@ -127,150 +122,123 @@ import axios from 'axios';
 
 export default {
   components: { SearchBarComponent },
-  props: ['AlrUsedMics', 'EventId'],
+  props: ['RD', 'ZoneId'],
   setup(props) {
     // const checkedMics = ref(props?.AlrUsedMics);
-    const EventId = props.EventId;
+    const ZoneId = props.ZoneId;
+    const rDevices = ref(props?.RD);
 
     const search = ref('');
 
-    return { EventId, search };
+    return { ZoneId, search, rDevices };
   },
 
   data() {
     return {
       isOpen: false,
-      recordingDevices: [],
-      existingMicNumbers: [],
+      // RecordingDevices: [],
+      // existingMicNumbers: [],
       checkedMics: [],
-      incidentRecordings: [],
+      // incidentRecordings: [],
     };
   },
-  methods: {
-    onSearched(event) {
-      this.search = event;
-    },
-    SelectAll() {
-      if (
-        this.checkedMics.length == this.filteredMics.length &&
-        this.checkedMics.length == this.recordingDevices.length
-      ) {
-        this.checkedMics = [];
-      } else {
-        this.filteredMics.forEach((mic) => {
-          if (!this.checkedMics.includes(mic.recordingDeviceId)) {
-            this.checkedMics.push(mic.recordingDeviceId);
-          }
-        });
-      }
-    },
-    GetIncidentRecordingDevices() {
-      axios
-        .get(`${process.env.VUE_APP_BASE_URL}Incident?event=${this.EventId}`)
-        .then((res) => {
-          res.data.forEach((data) => {
-            if (
-              this.incidentRecordings.indexOf(
-                data.eventRecordingDevice.recordingDeviceId
-              ) == -1
-            ) {
-              this.incidentRecordings.push(
-                data.eventRecordingDevice.recordingDeviceId
-              );
-            }
-          });
-        })
-        .catch((error) => {
-          console.error(
-            'Retrieving recordingDevices does not exist gave an error!',
-            error
-          );
-        });
-    },
-    GetRecordingDevices() {
-      axios
-        .get(`${process.env.VUE_APP_BASE_URL}EventRecordingDevice?event=${this.EventId}`)
-        .then((res) => this.recordingDevices = res.data)
-        .catch((error) => {
-          console.error('Retrieving recordingDevices gave an error!', error);
-        });
-    },
-    async GetExistingRecordingDevices() {
-      await axios
-        .get(
-          `${process.env.VUE_APP_BASE_URL}EventRecordingDevice?event=${this.EventId}`
-        )
-        .then((res) => {
-          res.data.forEach((mic) => {
-            this.existingMicNumbers.push(mic.recordingDeviceId);
-            this.checkedMics.push(mic.recordingDeviceId);
-          });
-        })
-        .catch((error) => {
-          console.error(
-            'Retrieving existing recordingDevices gave an error!',
-            error
-          );
-        });
-    },
+  // methods: {
+  //   onSearched(event) {
+  //     this.search = event;
+  //   },
+  //   SelectAll() {
+  //     if (
+  //       this.checkedMics.length == this.filteredMics.length &&
+  //       this.checkedMics.length == this.recordingDevices.length
+  //     ) {
+  //       this.checkedMics = [];
+  //     } else {
+  //       this.filteredMics.forEach((mic) => {
+  //         if (!this.checkedMics.includes(mic.recordingDeviceId)) {
+  //           this.checkedMics.push(mic.recordingDeviceId);
+  //         }
+  //       });
+  //     }
+  //   },
+  //   GetIncidentRecordingDevices() {
+  //     axios
+  //       .get(`${process.env.VUE_APP_BASE_URL}EventRecordingDevices?event=${this.EventId}`)
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           if (
+  //             this.incidentRecordings.indexOf(
+  //               data.eventRecordingDevice.recordingDeviceId
+  //             ) == -1
+  //           ) {
+  //             this.incidentRecordings.push(
+  //               data.eventRecordingDevice.recordingDeviceId
+  //             );
+  //           }
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error(
+  //           'Retrieving recordingDevices does not exist gave an error!',
+  //           error
+  //         );
+  //       });
+  //   },
+  //   async SaveChanges() {
+  //     this.existingMicNumbers.forEach((m) => {
+  //       if (!this.checkedMics.includes(m)) {
+  //         // DeleteRequest
+  //         axios
+  //           .delete(
+  //             `${process.env.VUE_APP_BASE_URL}EventRecordingDevice/${m}?eventId=${this.EventId}`
+  //           )
+  //           .then(() => console.log('Delete successful'))
+  //           .catch((err) =>
+  //             console.log(`Failed Deleting of EventRecordingDevice ${m}: `, err)
+  //           );
+  //       }
+  //     });
+  //     this.checkedMics.forEach((m) => {
+  //       if (!this.existingMicNumbers.includes(m)) {
+  //         // PostRequest
+  //         const requestOptions = {
+  //           headers: { 'Content-Type': 'application/json' },
+  //           body: {
+  //             eventRecordingDeviceId: 0,
+  //             eventId: this.EventId,
+  //             recordingDeviceId: m,
+  //           },
+  //         };
+  //         axios
+  //           .post(
+  //             `${process.env.VUE_APP_BASE_URL}EventRecordingDevice`,
+  //             requestOptions.body
+  //           )
+  //           .catch((err) =>
+  //             console.log(`Failed Posting of EventRecordingDevice ${m}: `, err)
+  //           );
+  //       }
+  //     });
 
-    async SaveChanges() {
-      this.existingMicNumbers.forEach((m) => {
-        if (!this.checkedMics.includes(m)) {
-          // DeleteRequest
-          axios
-            .delete(
-              `${process.env.VUE_APP_BASE_URL}EventRecordingDevice/${m}?eventId=${this.EventId}`
-            )
-            .then(() => console.log('Delete successful'))
-            .catch((err) =>
-              console.log(`Failed Deleting of EventRecordingDevice ${m}: `, err)
-            );
-        }
-      });
-      this.checkedMics.forEach((m) => {
-        if (!this.existingMicNumbers.includes(m)) {
-          // PostRequest
-          const requestOptions = {
-            headers: { 'Content-Type': 'application/json' },
-            body: {
-              eventRecordingDeviceId: 0,
-              eventId: this.EventId,
-              recordingDeviceId: m,
-            },
-          };
-          axios
-            .post(
-              `${process.env.VUE_APP_BASE_URL}EventRecordingDevice`,
-              requestOptions.body
-            )
-            .catch((err) =>
-              console.log(`Failed Posting of EventRecordingDevice ${m}: `, err)
-            );
-        }
-      });
+  //     await (this.existingMicNumbers = this.checkedMics);
+  //     setTimeout(() => {
+  //       this.$emit('reload-details');
 
-      await (this.existingMicNumbers = this.checkedMics);
-      setTimeout(() => {
-        this.$emit('reload-details');
+  //       setTimeout(() => {
+  //         this.isOpen = false;
+  //       }, 500);
+  //     }, 2000);
+  //   },
+  // },
 
-        setTimeout(() => {
-          this.isOpen = false;
-        }, 500);
-      }, 2000);
-    },
-  },
-
-  async mounted() {
-    await this.GetRecordingDevices();
-    // await this.GetExistingRecordingDevices();
-    // await this.GetIncidentRecordingDevices();
-  },
+  // async mounted() {
+  // },
 
   computed: {
     filteredMics() {
-      return this.recordingDevices.filter((mic) =>
-        mic.recordingDevice.name.toLowerCase().includes(this.search.toLowerCase())
+      return this.rDevices.filter((mic) =>
+        mic.recordingDevice?.name
+          .toLowerCase()
+          .includes(this.search.toLowerCase())
       );
     },
   },
