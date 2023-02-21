@@ -3,12 +3,12 @@
     <SearchBarComponent :whatToSearch="'Events'" @searched="onSearched" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
       <CrudEventComponent v-if="myUser.roleType.name == 'Admin'"
-        :eventData="''"
+        :event="{}"
         CreateOrUpdate="Create"
         :EventId="0"
       />
       <EventCardComponent
-        v-for="e in filteredData.slice(0, 8)"
+        v-for="e in filteredData"
         :key="e.eventId"
         :event="e"
         class="col"

@@ -42,9 +42,9 @@ export default {
     const thisId = props?.eventId;
     const router = useRouter();
     const thisEvent = props?.event;
-    console.log(thisEvent);
-    console.log('eventid', thisId);
-    return { thisEvent, router, thisId };
+
+    return {thisEvent, router, thisId}
+
   },
   mounted() {
     this.getDetails();
