@@ -9,14 +9,14 @@
         Go back
       </button>
     </div>
+
     <div class="grid">
       <h1 class="col flex justify-between text-4xl text-primary-orange">
         <div class="grid grid-cols-1">
           <span class="col">{{ event.name }}</span>
           <span class="col text-xl text-white text-opacity-40">{{ event.eventType?.name }}</span>
         </div> 
-        <!-- <StartStopComponent/> -->
-        
+        <StartStopComponent :event="event"/>
       </h1>
       <!-- <h2 class="col text-xl mb-6 text-white text-opacity-40">
         {{ event.eventType?.name }}
