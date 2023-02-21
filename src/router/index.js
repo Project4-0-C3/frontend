@@ -15,7 +15,7 @@ const routes = [
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
   },
-  
+
   // ADMIN
   {
     path: '/events',
@@ -44,6 +44,12 @@ const routes = [
     component: () => import('../views/events/EventDetails.vue'),
     props: true,
   },
+  {
+    path: '/activeEvent/:id',
+    name: 'ActiveEvent',
+    component: () => import('../views/events/ActiveEvent.vue'),
+    props: true,
+  },
 
   // DEVICES
   {
@@ -53,7 +59,7 @@ const routes = [
     props: true,
   },
 
-  // GROUPS AND THEIR USERS
+  // ZONES AND THEIR USERS
   {
     path: '/zone/:id',
     name: 'ZoneDetails',
