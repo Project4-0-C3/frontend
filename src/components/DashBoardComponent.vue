@@ -63,7 +63,7 @@
     <iframe
       :src="`http://grafana.westeurope.cloudapp.azure.com:3000/d-solo/iTCZz50Vz/testing?orgId=1&${all_dashboards[current_shown]}`"
       frameborder="0"
-      class="mx-auto rounded-md shadow-slate-700 shadow-md block h-auto min-h-[30rem] w-full"
+      class="mx-auto rounded-md shadow-slate-700 shadow-md block h-auto min-h-[40rem] w-full"
     ></iframe>
   </div>
 </template>

@@ -1,4 +1,5 @@
 <template>
+
   <div class="flex gap-2">
   <button v-if="event.startTime != null" @click="$router.push({path: `/activeevent/${eventId}`})" class="p-4 h-full text-white  text-xl rounded-lg shadow-lg hover:bg-opacity-80 hover:duration-200 duration-200 text-center flex justify-center bg-primary-orange"
 >{{ event.stopTime == null ? 'Live event statistics': 'Event log' }}</button>
@@ -6,6 +7,7 @@
     @click="startStop()"
     :class="
       event.startTime == null
+
         ? 'bg-green-900 hover:bg-green-500'
         : 'bg-red-900 hover:bg-red-500'
     "
@@ -44,6 +46,7 @@ export default {
     this.getDetails();
   },
   methods: {
+
     getDetails() {
       axios
         .get(`${process.env.VUE_APP_BASE_URL}Event/${this.thisId}`)
@@ -107,6 +110,7 @@ export default {
       else{
         const stopMoment = moment(Date.now()).utc("+1").format();
         await this.AddStopTime(stopMoment);
+
       }
     },
   },
